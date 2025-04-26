@@ -21,19 +21,22 @@ def inicio():
     
     if usuario == 'admin' and contrasena == 'admin123':
         session['usuario'] = usuario
-        return redirect(url_for('panel'))
+        return redirect(url_for('panel_guerrero'))
     else:
         return render_template('login.html', error='Credenciales incorrectas')
 
-@app.route('/panel')
-def panel():
+@app.route('/panel_guerrero')
+def panel_guerrero():
     if 'usuario' in session:
-        return render_template('panel.html')
+        return render_template('panel_guerrero.html')
     else:
         return redirect(url_for('login'))
 
 @app.route('/registrar_permiso', methods=['GET', 'POST'])
 def registrar_permiso():
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+
     if request.method == 'POST':
         marca = request.form['marca']
         linea = request.form['linea']
@@ -47,8 +50,9 @@ def registrar_permiso():
         fecha_expedicion = datetime.now().strftime("%Y-%m-%d")
         fecha_vencimiento = (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d")
         
+        # Generar un folio automático
         folio = f"DB{datetime.now().strftime('%d%H%M')}"
-        
+
         supabase.table('permisos').insert({
             "folio": folio,
             "marca": marca,
@@ -64,7 +68,7 @@ def registrar_permiso():
         }).execute()
         
         return redirect(url_for('ver_permiso', folio=folio))
-    
+
     return render_template('registro.html')
 
 @app.route('/verificar/<folio>')
