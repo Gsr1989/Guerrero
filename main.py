@@ -1,106 +1,70 @@
-from flask import Flask, render_template, request, redirect, url_for, session, send_file
-from supabase import create_client, Client
-from datetime import datetime, timedelta
-import fitz  # PyMuPDF
-import os
+from flask import Flask, render_template, request, redirect, url_for, send_file, session from datetime import datetime, timedelta from supabase import create_client, Client import fitz  # PyMuPDF import os
 
-app = Flask(__name__)
-app.secret_key = 'clave_super_segura_2025'
+app = Flask(name) app.secret_key = 'clave_super_segura_2025'
 
-SUPABASE_URL = "https://axgqvhgtbzkraytzaomw.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4Z3F2aGd0YnprYXl0emFvbXciLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc0NTU0MDA3NSwiZXhwIjoyMDYxMTYwNzV9.fWWMBg84zjeaCDAg-DV1SOJwVjbWDzKVsIMUTuVUVsY"
+SUPABASE_URL = "https://axgqvhgtbzkraytzaomw.supabase.co" SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4Z3F2aGd0YnprYXl0emFvbXciLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc0NTU0MDA3NSwiZXhwIjoyMDYxMTYwNzV9.fWWMBg84zjeaCDAg-DV1SOJwVjbWDzKVsIMUTuVUVsY"
+
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-@app.route('/')
-def login():
-    return render_template('login.html')
+OUTPUT_DIR = "static/pdfs" if not os.path.exists(OUTPUT_DIR): os.makedirs(OUTPUT_DIR)
 
-@app.route('/inicio', methods=['POST'])
-def inicio():
-    usuario = request.form['usuario']
-    contrasena = request.form['contrasena']
-    
-    if usuario == 'admin' and contrasena == 'Nivelbasico2025':
-        session['usuario'] = usuario
-        return redirect(url_for('panel_guerrero'))
-    else:
-        return render_template('login.html', error='Credenciales incorrectas')
+@app.route('/') def login(): return render_template('login.html')
 
-@app.route('/panel_guerrero')
-def panel_guerrero():
-    if 'usuario' in session:
-        return render_template('panel_guerrero.html')
-    else:
-        return redirect(url_for('login'))
+@app.route('/inicio', methods=['POST']) def inicio(): usuario = request.form['usuario'] contrasena = request.form['contrasena']
 
-@app.route('/registrar_guerrero', methods=['GET', 'POST'])
-def registrar_guerrero():
-    if 'usuario' not in session:
-        return redirect(url_for('login'))
+if usuario == 'admin' and contrasena == 'admin123':
+    session['usuario'] = usuario
+    return redirect(url_for('panel_guerrero'))
+else:
+    return render_template('login.html', error='Credenciales incorrectas')
 
-    if request.method == 'POST':
-        marca = request.form['marca']
-        linea = request.form['linea']
-        anio = request.form['anio']
-        color = request.form['color']
-        serie = request.form['serie']
-        motor = request.form['motor']
-        contribuyente = request.form['contribuyente']
-        tipo_vehiculo = request.form['tipo_vehiculo']
+@app.route('/panel_guerrero') def panel_guerrero(): if 'usuario' in session: return render_template('panel_guerrero.html') else: return redirect(url_for('login'))
 
-        fecha_expedicion = datetime.now().strftime("%d/%m/%Y")
-        fecha_vencimiento = (datetime.now() + timedelta(days=30)).strftime("%d/%m/%Y")
-        
-        # Generar un folio automático
-        folio = f"GR{datetime.now().strftime('%d%H%M%S')}"
+@app.route('/registrar_guerrero', methods=['GET', 'POST']) def registrar_guerrero(): if request.method == 'POST': marca = request.form['marca'] linea = request.form['linea'] anio = request.form['anio'] color = request.form['color'] serie = request.form['serie'] motor = request.form['motor'] contribuyente = request.form['contribuyente'] tipo_vehiculo = request.form['tipo_vehiculo']
 
-        # Guardar en Supabase
-        supabase.table('permisos').insert({
-            "folio": folio,
-            "marca": marca,
-            "linea": linea,
-            "anio": anio,
-            "color": color,
-            "serie": serie,
-            "motor": motor,
-            "contribuyente": contribuyente,
-            "tipo_vehiculo": tipo_vehiculo,
-            "fecha_expedicion": fecha_expedicion,
-            "fecha_vencimiento": fecha_vencimiento
-        }).execute()
+fecha_expedicion = datetime.now().strftime("%Y-%m-%d")
+    fecha_vencimiento = (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d")
 
-        # Generar PDF
-        generar_pdf_guerrero(folio, marca, linea, anio, color, serie, motor, contribuyente, tipo_vehiculo, fecha_expedicion, fecha_vencimiento)
+    folio = f"DB{datetime.now().strftime('%d%H%M%S')}"
 
-        return redirect(url_for('panel_guerrero'))
-    
-    return render_template('formulario_guerrero.html')
+    # Insertar en Supabase
+    supabase.table('permisos').insert({
+        "folio": folio,
+        "marca": marca,
+        "linea": linea,
+        "anio": anio,
+        "color": color,
+        "serie": serie,
+        "motor": motor,
+        "contribuyente": contribuyente,
+        "tipo_vehiculo": tipo_vehiculo,
+        "fecha_expedicion": fecha_expedicion,
+        "fecha_vencimiento": fecha_vencimiento
+    }).execute()
 
-def generar_pdf_guerrero(folio, marca, linea, anio, color, serie, motor, contribuyente, tipo_vehiculo, fecha_expedicion, fecha_vencimiento):
-    template_path = "static/pdf/Guerrero.pdf"
-    output_path = f"static/pdf/{folio}.pdf"
-    doc = fitz.open(template_path)
-    page = doc[0]
+    # Generar el PDF
+    plantilla = fitz.open("static/pdf/Guerrero.pdf")
+    page = plantilla[0]
+    page.insert_text((100, 100), f"FOLIO: {folio}", fontsize=12)
+    page.insert_text((100, 120), f"MARCA: {marca}", fontsize=12)
+    page.insert_text((100, 140), f"LINEA: {linea}", fontsize=12)
+    page.insert_text((100, 160), f"AÑO: {anio}", fontsize=12)
+    page.insert_text((100, 180), f"COLOR: {color}", fontsize=12)
+    page.insert_text((100, 200), f"SERIE: {serie}", fontsize=12)
+    page.insert_text((100, 220), f"MOTOR: {motor}", fontsize=12)
+    page.insert_text((100, 240), f"CONTRIBUYENTE: {contribuyente}", fontsize=12)
+    page.insert_text((100, 260), f"TIPO: {tipo_vehiculo}", fontsize=12)
+    page.insert_text((100, 280), f"EXPEDICIÓN: {fecha_expedicion}", fontsize=12)
+    page.insert_text((100, 300), f"VENCIMIENTO: {fecha_vencimiento}", fontsize=12)
 
-    page.insert_text((100, 100), f"Folio: {folio}", fontsize=12)
-    page.insert_text((100, 120), f"Marca: {marca}", fontsize=12)
-    page.insert_text((100, 140), f"Línea: {linea}", fontsize=12)
-    page.insert_text((100, 160), f"Año: {anio}", fontsize=12)
-    page.insert_text((100, 180), f"Color: {color}", fontsize=12)
-    page.insert_text((100, 200), f"Serie: {serie}", fontsize=12)
-    page.insert_text((100, 220), f"Motor: {motor}", fontsize=12)
-    page.insert_text((100, 240), f"Contribuyente: {contribuyente}", fontsize=12)
-    page.insert_text((100, 260), f"Tipo de Vehículo: {tipo_vehiculo}", fontsize=12)
-    page.insert_text((100, 280), f"Fecha de Expedición: {fecha_expedicion}", fontsize=12)
-    page.insert_text((100, 300), f"Fecha de Vencimiento: {fecha_vencimiento}", fontsize=12)
+    pdf_path = os.path.join(OUTPUT_DIR, f"{folio}.pdf")
+    plantilla.save(pdf_path)
 
-    doc.save(output_path)
-    doc.close()
+    return send_file(pdf_path, as_attachment=True)
 
-@app.route('/cerrar_sesion')
-def cerrar_sesion():
-    session.pop('usuario', None)
-    return redirect(url_for('login'))
+return render_template('formulario_guerrero.html')
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=10000)
+@app.route('/cerrar_sesion') def cerrar_sesion(): session.pop('usuario', None) return redirect(url_for('login'))
+
+if name == 'main': app.run(host='0.0.0.0', port=10000)
+
