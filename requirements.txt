@@ -1,0 +1,6 @@
+Flask
+supabase
+pytz
+PyMuPDF
+qrcode
+Pillow
