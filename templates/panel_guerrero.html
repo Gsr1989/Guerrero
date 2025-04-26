@@ -6,123 +6,124 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
-        body {
-            background-image: url("{{ url_for('static', filename='css/img/fondo_grecas.png') }}");
-            background-size: cover;
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            max-width: 95%;
+        .panel-container {
+            background-color: white;
             margin: 30px auto;
-            background: white;
             padding: 20px;
-            border-radius: 6px;
-            box-shadow: 0 0 10px #ccc;
-        }
-        h2 {
-            font-size: 18px;
-            background-color: #0073b7;
-            color: white;
-            padding: 10px;
-            border-radius: 5px 5px 0 0;
-            margin: 0;
-        }
-        .busqueda {
-            display: flex;
-            justify-content: space-between;
-            margin: 15px 0;
-        }
-        .busqueda input {
-            flex: 1;
-            padding: 8px;
-            margin-right: 10px;
-        }
-        .busqueda button {
-            padding: 8px 12px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
+            max-width: 95%;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px #ccc;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 14px;
+            margin-top: 10px;
         }
         th, td {
-            border: 1px solid #ccc;
             padding: 8px;
             text-align: center;
+            font-size: 14px;
+            border-bottom: 1px solid #ddd;
         }
         .vigente {
             color: green;
+            font-weight: bold;
         }
         .vencido {
             color: red;
+            font-weight: bold;
         }
-        .acciones a {
+        .acciones button {
             margin: 2px;
-            padding: 5px 6px;
+            padding: 5px 10px;
+            font-size: 12px;
+            border: none;
+            border-radius: 5px;
             background-color: #0073b7;
             color: white;
+            cursor: pointer;
+        }
+        .acciones button:hover {
+            background-color: #005f9e;
+        }
+        .nuevo-permiso {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
             text-decoration: none;
-            border-radius: 4px;
-            font-size: 13px;
+            margin-bottom: 10px;
             display: inline-block;
+            font-size: 14px;
         }
-        .acciones a:hover {
-            background-color: #005fa3;
+        .nuevo-permiso:hover {
+            background-color: #45a049;
         }
-        footer {
-            text-align: center;
-            background-color: #ddd;
-            padding: 10px;
-            font-size: 12px;
-            margin-top: 20px;
+        .search-bar {
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .search-bar input[type="text"] {
+            padding: 7px;
+            width: 200px;
+            max-width: 100%;
+            margin-right: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Permisos Emitidos</h2>
-        <div class="busqueda">
-            <input type="text" placeholder="Búsqueda ...">
-            <button onclick="location.href='/registrar_guerrero'">+ Nuevo Permiso</button>
+    <div class="panel-container">
+        <div class="search-bar">
+            <form method="GET" action="/buscar_guerrero">
+                <input type="text" name="buscar" placeholder="Buscar por Serie..." required>
+                <button type="submit">Buscar</button>
+            </form>
+            <a href="/registrar_guerrero" class="nuevo-permiso">+ Nuevo Permiso</a>
+            <a href="/cerrar_sesion" class="nuevo-permiso" style="background-color: #f44336;">Cerrar Sesión</a>
         </div>
+
         <table>
             <thead>
                 <tr>
                     <th>Folio</th>
                     <th>Expedición</th>
-                    <th>Estatus</th>
+                    <th>Vigencia</th>
                     <th>Marca</th>
                     <th>Modelo</th>
-                    <th>Número de Serie</th>
+                    <th>Serie</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {% for permiso in permisos %}
                 <tr>
-                    <td style="color: red;">{{ permiso.folio }}</td>
+                    <td style="color:red;">{{ permiso.folio }}</td>
                     <td>{{ permiso.fecha_expedicion }}</td>
                     <td class="{{ 'vigente' if permiso.estatus == 'VIGENTE' else 'vencido' }}">{{ permiso.estatus }}</td>
                     <td>{{ permiso.marca }}</td>
-                    <td>{{ permiso.anio }}</td>
+                    <td>{{ permiso.linea }}</td>
                     <td>{{ permiso.serie }}</td>
                     <td class="acciones">
-                        <a href="/verificar_folio/{{ permiso.folio }}">Ver</a>
-                        <a href="/editar_guerrero/{{ permiso.folio }}">Editar</a>
-                        <a href="/eliminar_guerrero/{{ permiso.folio }}">Eliminar</a>
-                        <a href="/generar_pdf/{{ permiso.folio }}">PDF</a>
+                        <form method="GET" action="/verificar_folio/{{ permiso.folio }}" style="display:inline;">
+                            <button type="submit">Ver</button>
+                        </form>
+                        <form method="GET" action="/editar_guerrero/{{ permiso.folio }}" style="display:inline;">
+                            <button type="submit">Editar</button>
+                        </form>
+                        <form method="POST" action="/eliminar_guerrero/{{ permiso.folio }}" style="display:inline;">
+                            <button type="submit" onclick="return confirm('¿Seguro que deseas eliminar este permiso?');">Eliminar</button>
+                        </form>
+                        <form method="GET" action="/generar_pdf_guerrero/{{ permiso.folio }}" style="display:inline;">
+                            <button type="submit">PDF</button>
+                        </form>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-    <footer>
-        TRÁNSITO MUNICIPAL DE TLAPA DE COMONFORT
-    </footer>
 </body>
 </html>
