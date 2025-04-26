@@ -2,43 +2,95 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Permiso Digital</title>
+    <title>Verificador de Permiso</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
         body {
-            background-color: #eef0f1;
+            background-image: url('{{ url_for('static', filename='img/fondo_grecas.png') }}');
+            background-size: contain;
             font-family: Arial, sans-serif;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
+            background-color: #eef0f1;
         }
         .container {
-            background: white;
-            border: 1px solid #ccc;
-            padding: 20px;
             max-width: 600px;
-            margin: auto;
+            background: white;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
         }
-        h2 {
+        .header-img {
             text-align: center;
-            color: #800000;
+            margin-bottom: 10px;
         }
-        .dato {
-            margin: 5px 0;
+        .header-img img {
+            max-width: 90%;
+            height: auto;
+        }
+        .title {
+            background-color: #0073b7;
+            color: white;
+            padding: 10px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .datos {
+            padding: 15px;
+            font-size: 16px;
+        }
+        .datos p {
+            margin: 8px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ccc;
+        }
+        .footer img {
+            width: 100px;
+            margin: 10px;
+        }
+        .footer-text {
+            font-size: 14px;
+            color: #333;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h2>Permiso de Tránsito Municipal</h2>
-        <p class="dato"><strong>Folio:</strong> {{ permiso.folio }}</p>
-        <p class="dato"><strong>Marca:</strong> {{ permiso.marca }}</p>
-        <p class="dato"><strong>Línea:</strong> {{ permiso.linea }}</p>
-        <p class="dato"><strong>Modelo:</strong> {{ permiso.anio }}</p>
-        <p class="dato"><strong>Color:</strong> {{ permiso.color }}</p>
-        <p class="dato"><strong>Serie:</strong> {{ permiso.serie }}</p>
-        <p class="dato"><strong>Motor:</strong> {{ permiso.motor }}</p>
-        <p class="dato"><strong>Contribuyente:</strong> {{ permiso.contribuyente }}</p>
-        <p class="dato"><strong>Fecha Expedición:</strong> {{ permiso.fecha_expedicion }}</p>
-        <p class="dato"><strong>Fecha Vencimiento:</strong> {{ permiso.fecha_vencimiento }}</p>
+        <div class="header-img">
+            <img src="{{ url_for('static', filename='img/guerrero_logo.png') }}" alt="Guerrero Logo">
+        </div>
+
+        <div class="title">Verificador de Permiso</div>
+
+        <div class="datos">
+            <p><strong>Marca:</strong> {{ permiso.marca }}</p>
+            <p><strong>Línea:</strong> {{ permiso.linea }}</p>
+            <p><strong>Modelo:</strong> {{ permiso.anio }}</p>
+            <p><strong>Color:</strong> {{ permiso.color }}</p>
+            <p><strong>Número de Serie:</strong> {{ permiso.serie }}</p>
+            <p><strong>Número de Motor:</strong> {{ permiso.motor }}</p>
+            <p><strong>Fecha Expedición:</strong> {{ permiso.fecha_expedicion }}</p>
+            <p><strong>Fecha Vencimiento:</strong> {{ permiso.fecha_vencimiento }}</p>
+        </div>
+
+        <div class="title">Permiso de Tránsito Municipal</div>
+
+        <div class="footer">
+            <img src="{{ url_for('static', filename='img/tlapa_logo.png') }}" alt="Tlapa Logo">
+            <img src="{{ url_for('static', filename='img/guerrero_icon.png') }}" alt="Icon Guerrero">
+            <div class="footer-text">
+                LTM | Tlapa de Comonfort Gro.
+            </div>
+        </div>
     </div>
+
 </body>
 </html>
