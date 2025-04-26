@@ -1,72 +1,67 @@
-# src/main.py
+import os
 from flask import Flask, render_template, request, redirect, url_for, send_file, session
 from datetime import datetime, timedelta
 from supabase import create_client
 import fitz  # PyMuPDF
-import os
 
 app = Flask(__name__)
-app.secret_key = 'clave_super_segura_2025'
+app.secret_key = "clave_super_segura_2025"
 
-# Lee estas variables de entorno en producción
-SUPABASE_URL = os.getenv("SUPABASE_URL", "https://axgqvhgtbzkraytzaomw.supabase.co")
-SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "<TU_SERVICE_ROLE_KEY>")
+# DATOS FIJOS DE SUPABASE
+SUPABASE_URL = "https://axgqvhgtbzkraytzaomw.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1d3NpcHBudnl5bndueGFud252Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU2NDU3MDcsImV4cCI6MjA2MTIyMTcwN30.bm7J6b3k_F0JxPFFRTklBDOgHRJTvEa1s-uwvSwVxTs"
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-OUTPUT_DIR = "static/pdfs"
+# Asegurar carpeta para PDFs
+OUTPUT_DIR = os.path.join("static", "pdfs")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-@app.route('/')
+@app.route("/")
 def login():
-    return render_template('login.html')
+    return render_template("login.html")
 
-@app.route('/inicio', methods=['POST'])
+@app.route("/inicio", methods=["POST"])
 def inicio():
-    usuario = request.form['usuario']
-    contrasena = request.form['contrasena']
-
-    if usuario == 'admin' and contrasena == 'admin123':
-        session['usuario'] = usuario
-        return redirect(url_for('panel_guerrero'))
+    usuario = request.form.get("usuario")
+    contrasena = request.form.get("contrasena")
+    if usuario == "admin" and contrasena == "admin123":
+        session["usuario"] = usuario
+        return redirect(url_for("panel_guerrero"))
     else:
-        return render_template('login.html', error='Credenciales incorrectas')
+        return render_template("login.html", error="Credenciales incorrectas")
 
-@app.route('/panel_guerrero')
+@app.route("/panel_guerrero")
 def panel_guerrero():
-    if 'usuario' not in session:
-        return redirect(url_for('login'))
+    if "usuario" not in session:
+        return redirect(url_for("login"))
+    try:
+        data = supabase.table("permisos").select("*").order("fecha_expedicion", desc=True).execute()
+        permisos = data.data or []
+    except Exception:
+        permisos = []
+    return render_template("panel_guerrero.html", permisos=permisos)
 
-    # Trae todos los permisos, ordenados por fecha de expedición descendente
-    resp = supabase.table('permisos')\
-        .select('*')\
-        .order('fecha_expedicion', desc=True)\
-        .execute()
-    permisos = resp.data or []
-    return render_template('panel_guerrero.html', permisos=permisos)
-
-@app.route('/registrar_guerrero', methods=['GET', 'POST'])
+@app.route("/registrar_guerrero", methods=["GET", "POST"])
 def registrar_guerrero():
-    if 'usuario' not in session:
-        return redirect(url_for('login'))
-
-    if request.method == 'POST':
-        marca = request.form['marca']
-        linea = request.form['linea']
-        anio = request.form['anio']
-        color = request.form['color']
-        serie = request.form['serie']
-        motor = request.form['motor']
-        contribuyente = request.form['contribuyente']
-        tipo_vehiculo = request.form['tipo_vehiculo']
+    if "usuario" not in session:
+        return redirect(url_for("login"))
+    if request.method == "POST":
+        marca = request.form.get("marca")
+        linea = request.form.get("linea")
+        anio = request.form.get("anio")
+        color = request.form.get("color")
+        serie = request.form.get("serie")
+        motor = request.form.get("motor")
+        contribuyente = request.form.get("contribuyente")
+        tipo_vehiculo = request.form.get("tipo_vehiculo")
 
         fecha_expedicion = datetime.now().strftime("%Y-%m-%d")
         fecha_vencimiento = (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d")
-
         folio = f"DB{datetime.now().strftime('%d%H%M%S')}"
 
-        # Inserta en Supabase
-        supabase.table('permisos').insert({
+        # Insertar en la tabla 'permisos'
+        supabase.table("permisos").insert({
             "folio": folio,
             "marca": marca,
             "linea": linea,
@@ -80,25 +75,27 @@ def registrar_guerrero():
             "fecha_vencimiento": fecha_vencimiento
         }).execute()
 
-        # Genera el PDF sobre la plantilla
-        plantilla = fitz.open("static/pdf/Guerrero.pdf")
+        # Generar PDF basado en Guerrero.pdf
+        plantilla = fitz.open(os.path.join("static", "pdf", "Guerrero.pdf"))
         page = plantilla[0]
-        datos = [
-            ("FOLIO", folio),
-            ("MARCA", marca),
-            ("LÍNEA", linea),
-            ("AÑO", anio),
-            ("COLOR", color),
-            ("SERIE", serie),
-            ("MOTOR", motor),
-            ("CONTRIBUYENTE", contribuyente),
-            ("TIPO VEHÍCULO", tipo_vehiculo),
-            ("EXPEDICIÓN", fecha_expedicion),
-            ("VENCIMIENTO", fecha_vencimiento),
-        ]
+
         y = 100
-        for etiqueta, valor in datos:
-            page.insert_text((100, y), f"{etiqueta}: {valor}", fontsize=12)
+        datos = [
+            ("FOLIO:", folio),
+            ("MARCA:", marca),
+            ("LINEA:", linea),
+            ("AÑO:", anio),
+            ("COLOR:", color),
+            ("SERIE:", serie),
+            ("MOTOR:", motor),
+            ("CONTRIBUYENTE:", contribuyente),
+            ("TIPO:", tipo_vehiculo),
+            ("EXPEDICIÓN:", fecha_expedicion),
+            ("VENCIMIENTO:", fecha_vencimiento),
+        ]
+
+        for label, valor in datos:
+            page.insert_text((100, y), f"{label} {valor}", fontsize=12)
             y += 20
 
         pdf_path = os.path.join(OUTPUT_DIR, f"{folio}.pdf")
@@ -107,12 +104,12 @@ def registrar_guerrero():
 
         return send_file(pdf_path, as_attachment=True)
 
-    return render_template('formulario_guerrero.html')
+    return render_template("formulario_guerrero.html")
 
-@app.route('/cerrar_sesion')
+@app.route("/cerrar_sesion")
 def cerrar_sesion():
-    session.pop('usuario', None)
-    return redirect(url_for('login'))
+    session.pop("usuario", None)
+    return redirect(url_for("login"))
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=10000)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=10000)
