@@ -11,32 +11,28 @@ SUPABASE_URL = "https://axgqvhgtbzkraytzaomw.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4Z3F2aGd0YnprYXl0emFvbXciLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc0NTU0MDA3NSwiZXhwIjoyMDYxMTYwNzV9.fWWMBg84zjeaCDAg-DV1SOJwVjbWDzKVsIMUTuVUVsY"
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-# Ruta raíz
 @app.route('/')
 def login():
     return render_template('login.html')
 
-# Procesar login
 @app.route('/inicio', methods=['POST'])
 def inicio():
     usuario = request.form['usuario']
     contrasena = request.form['contrasena']
-    if usuario == 'admin' and contrasena == 'admin123':
+    
+    if usuario == 'admin' and contrasena == 'Nivelbasico2025':
         session['usuario'] = usuario
         return redirect(url_for('panel_guerrero'))
     else:
         return render_template('login.html', error='Credenciales incorrectas')
 
-# Panel principal
 @app.route('/panel_guerrero')
 def panel_guerrero():
     if 'usuario' in session:
-        permisos = supabase.table('permisos_guerrero').select('*').execute().data
-        return render_template('panel_guerrero.html', permisos=permisos)
+        return render_template('panel_guerrero.html')
     else:
         return redirect(url_for('login'))
 
-# Registrar nuevo permiso
 @app.route('/registrar_guerrero', methods=['GET', 'POST'])
 def registrar_guerrero():
     if 'usuario' not in session:
@@ -54,10 +50,12 @@ def registrar_guerrero():
 
         fecha_expedicion = datetime.now().strftime("%d/%m/%Y")
         fecha_vencimiento = (datetime.now() + timedelta(days=30)).strftime("%d/%m/%Y")
-        folio = f"GR-{datetime.now().strftime('%Y%m%d%H%M%S')}"
+        
+        # Generar un folio automático
+        folio = f"GR{datetime.now().strftime('%d%H%M%S')}"
 
-        # Guardar en la base de datos
-        supabase.table('permisos_guerrero').insert({
+        # Guardar en Supabase
+        supabase.table('permisos').insert({
             "folio": folio,
             "marca": marca,
             "linea": linea,
@@ -71,69 +69,34 @@ def registrar_guerrero():
             "fecha_vencimiento": fecha_vencimiento
         }).execute()
 
-        # Generar el PDF
-        plantilla_path = 'static/pdf/Guerrero.pdf'
-        salida_path = f'static/pdf/{folio}.pdf'
-
-        doc = fitz.open(plantilla_path)
-        page = doc[0]
-
-        # Escribir texto (ajustar coordenadas si quieres mover)
-        page.insert_text((150, 150), f"Folio: {folio}", fontsize=12)
-        page.insert_text((150, 180), f"Contribuyente: {contribuyente}", fontsize=12)
-        page.insert_text((150, 210), f"Marca: {marca}", fontsize=12)
-        page.insert_text((150, 240), f"Línea: {linea}", fontsize=12)
-        page.insert_text((150, 270), f"Año: {anio}", fontsize=12)
-        page.insert_text((150, 300), f"Color: {color}", fontsize=12)
-        page.insert_text((150, 330), f"Serie: {serie}", fontsize=12)
-        page.insert_text((150, 360), f"Motor: {motor}", fontsize=12)
-        page.insert_text((150, 390), f"Tipo de Vehículo: {tipo_vehiculo}", fontsize=12)
-        page.insert_text((150, 420), f"Fecha Expedición: {fecha_expedicion}", fontsize=12)
-        page.insert_text((150, 450), f"Fecha Vencimiento: {fecha_vencimiento}", fontsize=12)
-
-        doc.save(salida_path)
-        doc.close()
+        # Generar PDF
+        generar_pdf_guerrero(folio, marca, linea, anio, color, serie, motor, contribuyente, tipo_vehiculo, fecha_expedicion, fecha_vencimiento)
 
         return redirect(url_for('panel_guerrero'))
-
+    
     return render_template('formulario_guerrero.html')
 
-# Verificar permiso
-@app.route('/verificar_guerrero/<folio>')
-def verificar_guerrero(folio):
-    permiso = supabase.table('permisos_guerrero').select('*').eq('folio', folio).execute().data
-    if permiso:
-        return render_template('verificador_guerrero.html', permiso=permiso[0])
-    else:
-        return "Permiso no encontrado"
+def generar_pdf_guerrero(folio, marca, linea, anio, color, serie, motor, contribuyente, tipo_vehiculo, fecha_expedicion, fecha_vencimiento):
+    template_path = "static/pdf/Guerrero.pdf"
+    output_path = f"static/pdf/{folio}.pdf"
+    doc = fitz.open(template_path)
+    page = doc[0]
 
-# Editar permiso
-@app.route('/editar_guerrero/<folio>', methods=['GET', 'POST'])
-def editar_guerrero(folio):
-    if 'usuario' not in session:
-        return redirect(url_for('login'))
+    page.insert_text((100, 100), f"Folio: {folio}", fontsize=12)
+    page.insert_text((100, 120), f"Marca: {marca}", fontsize=12)
+    page.insert_text((100, 140), f"Línea: {linea}", fontsize=12)
+    page.insert_text((100, 160), f"Año: {anio}", fontsize=12)
+    page.insert_text((100, 180), f"Color: {color}", fontsize=12)
+    page.insert_text((100, 200), f"Serie: {serie}", fontsize=12)
+    page.insert_text((100, 220), f"Motor: {motor}", fontsize=12)
+    page.insert_text((100, 240), f"Contribuyente: {contribuyente}", fontsize=12)
+    page.insert_text((100, 260), f"Tipo de Vehículo: {tipo_vehiculo}", fontsize=12)
+    page.insert_text((100, 280), f"Fecha de Expedición: {fecha_expedicion}", fontsize=12)
+    page.insert_text((100, 300), f"Fecha de Vencimiento: {fecha_vencimiento}", fontsize=12)
 
-    if request.method == 'POST':
-        data = {
-            "marca": request.form['marca'],
-            "linea": request.form['linea'],
-            "anio": request.form['anio'],
-            "color": request.form['color'],
-            "serie": request.form['serie'],
-            "motor": request.form['motor'],
-            "contribuyente": request.form['contribuyente'],
-            "tipo_vehiculo": request.form['tipo_vehiculo']
-        }
-        supabase.table('permisos_guerrero').update(data).eq('folio', folio).execute()
-        return redirect(url_for('panel_guerrero'))
+    doc.save(output_path)
+    doc.close()
 
-    permiso = supabase.table('permisos_guerrero').select('*').eq('folio', folio).execute().data
-    if permiso:
-        return render_template('editar_guerrero.html', permiso=permiso[0])
-    else:
-        return "Permiso no encontrado"
-
-# Cerrar sesión
 @app.route('/cerrar_sesion')
 def cerrar_sesion():
     session.pop('usuario', None)
