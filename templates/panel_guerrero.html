@@ -2,93 +2,64 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Registrar Permiso - Guerrero</title>
+    <title>Panel Guerrero</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body {
-            background-color: #f9f9f9;
             font-family: Arial, sans-serif;
+            background-color: #ffffff;
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
-        .form-container {
-            max-width: 400px;
-            background: #fff;
-            padding: 20px;
-            margin: 50px auto;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        h2 {
+        header {
+            background-color: #00563f;
+            color: white;
+            padding: 15px;
             text-align: center;
-            color: #0073b7;
+            font-size: 22px;
+            font-weight: bold;
         }
-        label {
+        .container {
+            margin: 30px;
+            text-align: center;
+        }
+        .boton {
             display: block;
-            margin-top: 10px;
-            color: #333;
-            font-size: 14px;
-        }
-        input, select, button {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
+            width: 80%;
+            margin: 15px auto;
+            padding: 15px;
             background-color: #0073b7;
             color: white;
-            font-size: 16px;
             border: none;
-        }
-        button:hover {
-            background-color: #005fa3;
-        }
-        a {
-            display: block;
-            text-align: center;
-            margin-top: 15px;
-            color: #0073b7;
+            border-radius: 8px;
+            font-size: 18px;
             text-decoration: none;
+        }
+        footer {
+            background-color: #00563f;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            font-size: 13px;
         }
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <h2>Nuevo Permiso Guerrero</h2>
-        <form method="POST" action="{{ url_for('registrar_guerrero') }}">
-            <label for="marca">Marca:</label>
-            <input type="text" id="marca" name="marca" required>
+    <header>
+        Panel de Permisos - Guerrero
+    </header>
 
-            <label for="linea">Línea:</label>
-            <input type="text" id="linea" name="linea" required>
-
-            <label for="anio">Año:</label>
-            <input type="text" id="anio" name="anio" required>
-
-            <label for="color">Color:</label>
-            <input type="text" id="color" name="color" required>
-
-            <label for="serie">Número de Serie:</label>
-            <input type="text" id="serie" name="serie" required>
-
-            <label for="motor">Número de Motor:</label>
-            <input type="text" id="motor" name="motor" required>
-
-            <label for="contribuyente">Contribuyente:</label>
-            <input type="text" id="contribuyente" name="contribuyente" required>
-
-            <label for="tipo_vehiculo">Tipo de Vehículo:</label>
-            <select id="tipo_vehiculo" name="tipo_vehiculo" required>
-                <option value="Motocicleta">Motocicleta</option>
-                <option value="Automóvil">Automóvil</option>
-            </select>
-
-            <button type="submit">Registrar Permiso</button>
-        </form>
-        <a href="{{ url_for('panel_guerrero') }}">Volver al Panel</a>
+    <div class="container">
+        <a href="{{ url_for('formulario_guerrero') }}" class="boton">+ Nuevo Permiso</a>
+        <a href="{{ url_for('verificador_guerrero') }}" class="boton">Consultar Permiso</a>
+        <a href="{{ url_for('cerrar_sesion') }}" class="boton" style="background-color: #d9534f;">Cerrar Sesión</a>
     </div>
+
+    <footer>
+        Plataforma de Tránsito - Municipio de Tlapa de Comonfort
+    </footer>
 </body>
 </html>
