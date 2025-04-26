@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Permiso</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <h2>Editar Permiso - {{ permiso.folio }}</h2>
+    <form method="POST">
+        <label>Marca:</label><input name="marca" value="{{ permiso.marca }}"><br>
+        <label>Línea:</label><input name="linea" value="{{ permiso.linea }}"><br>
+        <label>Año:</label><input name="anio" value="{{ permiso.anio }}"><br>
+        <label>Color:</label><input name="color" value="{{ permiso.color }}"><br>
+        <label>Serie:</label><input name="serie" value="{{ permiso.serie }}"><br>
+        <label>Motor:</label><input name="motor" value="{{ permiso.motor }}"><br>
+        <label>Contribuyente:</label><input name="contribuyente" value="{{ permiso.contribuyente }}"><br>
+        <button type="submit">Guardar</button>
+    </form>
+    <a href="/panel_guerrero">Cancelar</a>
+</body>
+</html>
