@@ -7,7 +7,7 @@ import os
 app = Flask(__name__)
 app.secret_key = 'clave_super_segura_2025'
 
-SUPABASE_URL = "https://axgqvhgtbzkraytzaomw.supabase.co"
+SUPABASE_URL = "https://iuwsippnvyynxanvn.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1d3NpcHBudnl5bndueGFud252Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU2NDU3MDcsImV4cCI6MjA2MTIyMTcwN30.bm7J6b3k_F0JxPFFRTklBDOgHRJTvEa1s-uwvSwVxTs"
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
@@ -24,6 +24,7 @@ def login():
 def inicio():
     usuario = request.form['usuario']
     contrasena = request.form['contrasena']
+
     if usuario == 'admin' and contrasena == 'admin123':
         session['usuario'] = usuario
         return redirect(url_for('panel_guerrero'))
@@ -69,13 +70,13 @@ def registrar_guerrero():
             "fecha_vencimiento": fecha_vencimiento
         }).execute()
 
-        # Generar el PDF
+        # Generar PDF
         plantilla = fitz.open("static/pdf/Guerrero.pdf")
         page = plantilla[0]
         page.insert_text((100, 100), f"FOLIO: {folio}", fontsize=12)
         page.insert_text((100, 120), f"MARCA: {marca}", fontsize=12)
-        page.insert_text((100, 140), f"LINEA: {linea}", fontsize=12)
-        page.insert_text((100, 160), f"AÑO: {anio}", fontsize=12)
+        page.insert_text((100, 140), f"LÍNEA: {linea}", fontsize=12)
+        page.insert_text((100, 160), f"MODELO: {anio}", fontsize=12)
         page.insert_text((100, 180), f"COLOR: {color}", fontsize=12)
         page.insert_text((100, 200), f"SERIE: {serie}", fontsize=12)
         page.insert_text((100, 220), f"MOTOR: {motor}", fontsize=12)
@@ -89,7 +90,7 @@ def registrar_guerrero():
 
         return send_file(pdf_path, as_attachment=True)
 
-    return redirect(url_for('panel_guerrero'))
+    return render_template('formulario_guerrero.html')
 
 @app.route('/cerrar_sesion')
 def cerrar_sesion():
