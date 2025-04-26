@@ -1,103 +1,128 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Permisos Emitidos</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style_login.css') }}">
-  <style>
-    body {
-      background-image: url("{{ url_for('static', filename='img/fondo_grecas.png') }}");
-      background-size: cover;
-      background-repeat: repeat;
-      font-family: Arial, sans-serif;
-    }
-
-    .contenedor {
-      max-width: 900px;
-      margin: 40px auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
-    }
-
-    h2 {
-      text-align: center;
-      background-color: #0073b7;
-      color: white;
-      padding: 12px;
-      border-radius: 5px;
-      font-size: 18px;
-    }
-
-    a.boton {
-      display: inline-block;
-      margin: 10px 5px;
-      background-color: #0073b7;
-      color: white;
-      padding: 8px 14px;
-      border-radius: 5px;
-      text-decoration: none;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      font-size: 14px;
-    }
-
-    th, td {
-      border: 1px solid #ccc;
-      padding: 10px;
-      text-align: center;
-    }
-
-    th {
-      background-color: #f2f2f2;
-    }
-
-    .vigente { color: green; font-weight: bold; }
-    .vencido { color: red; font-weight: bold; }
-
-    .acciones a {
-      text-decoration: none;
-      margin: 0 5px;
-      color: #0073b7;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Permisos Emitidos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='css/img/fondo_grecas.png') }}");
+            background-size: cover;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 95%;
+            margin: 30px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 6px;
+            box-shadow: 0 0 10px #ccc;
+        }
+        h2 {
+            font-size: 18px;
+            background-color: #0073b7;
+            color: white;
+            padding: 10px;
+            border-radius: 5px 5px 0 0;
+            margin: 0;
+        }
+        .busqueda {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+        }
+        .busqueda input {
+            flex: 1;
+            padding: 8px;
+            margin-right: 10px;
+        }
+        .busqueda button {
+            padding: 8px 12px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        .vigente {
+            color: green;
+        }
+        .vencido {
+            color: red;
+        }
+        .acciones a {
+            margin: 2px;
+            padding: 5px 6px;
+            background-color: #0073b7;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 13px;
+            display: inline-block;
+        }
+        .acciones a:hover {
+            background-color: #005fa3;
+        }
+        footer {
+            text-align: center;
+            background-color: #ddd;
+            padding: 10px;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-  <div class="contenedor">
-    <h2>Permisos Emitidos</h2>
-    <div style="text-align: center;">
-      <a href="/registrar_guerrero" class="boton">+ Nuevo Permiso</a>
-      <a href="/cerrar_sesion" class="boton">Cerrar Sesión</a>
+    <div class="container">
+        <h2>Permisos Emitidos</h2>
+        <div class="busqueda">
+            <input type="text" placeholder="Búsqueda ...">
+            <button onclick="location.href='/registrar_guerrero'">+ Nuevo Permiso</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Folio</th>
+                    <th>Expedición</th>
+                    <th>Estatus</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Número de Serie</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for permiso in permisos %}
+                <tr>
+                    <td style="color: red;">{{ permiso.folio }}</td>
+                    <td>{{ permiso.fecha_expedicion }}</td>
+                    <td class="{{ 'vigente' if permiso.estatus == 'VIGENTE' else 'vencido' }}">{{ permiso.estatus }}</td>
+                    <td>{{ permiso.marca }}</td>
+                    <td>{{ permiso.anio }}</td>
+                    <td>{{ permiso.serie }}</td>
+                    <td class="acciones">
+                        <a href="/verificar_folio/{{ permiso.folio }}">Ver</a>
+                        <a href="/editar_guerrero/{{ permiso.folio }}">Editar</a>
+                        <a href="/eliminar_guerrero/{{ permiso.folio }}">Eliminar</a>
+                        <a href="/generar_pdf/{{ permiso.folio }}">PDF</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-
-    <table>
-      <tr>
-        <th>Folio</th>
-        <th>Expedición</th>
-        <th>Estatus</th>
-        <th>Marca</th>
-        <th>Acciones</th>
-      </tr>
-      {% for permiso in permisos %}
-      <tr>
-        <td style="color: red; font-weight: bold;">{{ permiso.folio }}</td>
-        <td>{{ permiso.fecha_expedicion }}</td>
-        <td class="{{ 'vigente' if permiso.estatus == 'VIGENTE' else 'vencido' }}">{{ permiso.estatus }}</td>
-        <td>{{ permiso.marca }}</td>
-        <td class="acciones">
-          <a href="/verificar_folio/{{ permiso.folio }}">Ver</a>
-          <a href="/editar_guerrero/{{ permiso.folio }}">Editar</a>
-          <a href="/eliminar_guerrero/{{ permiso.folio }}">Eliminar</a>
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
-  </div>
+    <footer>
+        TRÁNSITO MUNICIPAL DE TLAPA DE COMONFORT
+    </footer>
 </body>
 </html>
