@@ -1,97 +1,106 @@
-<!DOCTYPE html><html lang="es">
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Verificador de Permiso</title>
+    <title>Permiso Digital - Guerrero</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body {
-            background-image: url('/static/img/fondo_grecas.png');
+            background-image: url('{{ url_for('static', filename='img/fondo_grecas.png') }}');
             background-size: cover;
             background-repeat: repeat;
-            background-attachment: fixed;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             text-align: center;
         }
         .container {
-            background: white;
-            margin: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            width: 90%;
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
             border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        .banner {
+        .logo-banner {
             width: 100%;
-            height: auto;
+            max-width: 400px;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 18px;
+        }
+        td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ccc;
         }
         .section-title {
-            background-color: #1976d2;
+            background-color: #1e88e5;
             color: white;
-            padding: 10px;
-            font-weight: bold;
-            font-size: 18px;
+            font-size: 20px;
+            padding: 8px;
+            border-radius: 6px 6px 0 0;
+            margin-top: 10px;
         }
-        .info {
-            padding: 10px;
-            text-align: left;
-            font-size: 16px;
-        }
-        .info p {
-            margin: 8px 0;
-        }
-        .info strong {
-            display: inline-block;
-            width: 150px;
-        }
-        .section-footer {
-            background-color: #1976d2;
+        .footer-button {
+            background-color: #1e88e5;
             color: white;
-            padding: 10px;
-            font-weight: bold;
             font-size: 18px;
+            padding: 8px;
+            border-radius: 0 0 6px 6px;
+            margin-top: 20px;
         }
         .logos {
-            margin: 15px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px;
+            gap: 20px;
         }
         .logos img {
-            height: 60px;
-            margin: 0 10px;
+            width: 90px;
+            height: auto;
         }
-        footer {
-            font-size: 18px;
-            color: #666;
-            margin-bottom: 20px;
+        .footer-text {
+            font-size: 16px;
+            margin-top: 10px;
+            color: #555;
         }
     </style>
 </head>
-<body><div class="container">
-    <img src="/static/img/guerrero_logo.png" alt="Banner Guerrero" class="banner">
+<body>
 
-    <div class="section-title">Verificador de Permiso</div>
+    <div class="container">
+        <img src="{{ url_for('static', filename='img/guerrero_logo.png') }}" alt="Banner Guerrero" class="logo-banner">
 
-    <div class="info">
-        <p><strong>Marca:</strong> {{ permiso.marca }}</p>
-        <p><strong>Línea:</strong> {{ permiso.linea }}</p>
-        <p><strong>Modelo:</strong> {{ permiso.anio }}</p>
-        <p><strong>Color:</strong> {{ permiso.color }}</p>
-        <p><strong>Número de Serie:</strong> {{ permiso.serie }}</p>
-        <p><strong>Número de Motor:</strong> {{ permiso.motor }}</p>
-        <p><strong>Fecha Expedición:</strong> {{ permiso.fecha_expedicion }}</p>
-        <p><strong>Fecha Vencimiento:</strong> {{ permiso.fecha_vencimiento }}</p>
+        <div class="section-title">Verificador de Permiso</div>
+
+        <table>
+            <tr><td><strong>Marca:</strong> {{ permiso.marca }}</td></tr>
+            <tr><td><strong>Línea:</strong> {{ permiso.linea }}</td></tr>
+            <tr><td><strong>Modelo:</strong> {{ permiso.anio }}</td></tr>
+            <tr><td><strong>Color:</strong> {{ permiso.color }}</td></tr>
+            <tr><td><strong>Número de Serie:</strong> {{ permiso.serie }}</td></tr>
+            <tr><td><strong>Número de Motor:</strong> {{ permiso.motor }}</td></tr>
+            <tr><td><strong>Fecha Expedición:</strong> {{ permiso.fecha_expedicion }}</td></tr>
+            <tr><td><strong>Fecha Vencimiento:</strong> {{ permiso.fecha_vencimiento }}</td></tr>
+        </table>
+
+        <div class="footer-button">Permiso de Tránsito Municipal</div>
+
+        <div class="logos">
+            <img src="{{ url_for('static', filename='img/tlapa_logo.png') }}" alt="Logo Tlapa">
+            <img src="{{ url_for('static', filename='img/guerrero_icon.png') }}" alt="Logo Guerrero">
+        </div>
+
+        <div class="footer-text">
+            LTM | Tlapa de Comonfort Gro.
+        </div>
     </div>
-
-    <div class="section-footer">Permiso de Tránsito Municipal</div>
-
-    <div class="logos">
-        <img src="/static/img/tlapa_logo.png" alt="Logo Tlapa">
-        <img src="/static/img/guerrero_icon.png" alt="Logo Guerrero">
-    </div>
-
-    <footer>
-        LTM | Tlapa de Comonfort Gro.
-    </footer>
-</div>
 
 </body>
 </html>
