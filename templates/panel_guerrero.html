@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Permisos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        .vigente { color: green; }
+        .vencido { color: red; }
+        .acciones a {
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Permisos Emitidos</h2>
+    <a href="/registrar_guerrero">+ Nuevo Permiso</a> | <a href="/cerrar_sesion">Cerrar Sesión</a>
+    <table>
+        <tr>
+            <th>Folio</th>
+            <th>Expedición</th>
+            <th>Estatus</th>
+            <th>Marca</th>
+            <th>Acciones</th>
+        </tr>
+        {% for permiso in permisos %}
+        <tr>
+            <td style="color: red;">{{ permiso.folio }}</td>
+            <td>{{ permiso.fecha_expedicion }}</td>
+            <td class="{{ 'vigente' if permiso.estatus == 'VIGENTE' else 'vencido' }}">{{ permiso.estatus }}</td>
+            <td>{{ permiso.marca }}</td>
+            <td class="acciones">
+                <a href="/verificar_folio/{{ permiso.folio }}">Ver</a>
+                <a href="/editar_guerrero/{{ permiso.folio }}">Editar</a>
+                <a href="/eliminar_guerrero/{{ permiso.folio }}">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
