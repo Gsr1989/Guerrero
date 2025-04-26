@@ -1,40 +1,86 @@
-from flask import Flask, render_template, request, redirect, url_for, session, send_file from supabase import create_client, Client from datetime import datetime, timedelta import fitz  # PyMuPDF import os
+from flask import Flask, render_template, request, redirect, url_for, session
+from supabase import create_client, Client
+from datetime import datetime, timedelta
 
-app = Flask(name) app.secret_key = 'clave_super_segura'
+app = Flask(__name__)
+app.secret_key = 'clave_super_segura_2025'
 
-Configura tu conexión Supabase
+SUPABASE_URL = "https://axgqvhgtbzkraytzaomw.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4Z3F2aGd0YnprYXl0emFvbXciLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc0NTU0MDA3NSwiZXhwIjoyMDYxMTYwNzV9.fWWMBg84zjeaCDAg-DV1SOJwVjbWDzKVsIMUTuVUVsY"
 
-SUPABASE_URL = "https://iuwsippnvyynwnxanwnv.supabase.co" SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1d3NpcHBudnl5bndueGFud252Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU2NDU3MDcsImV4cCI6MjA2MTIyMTcwN30.bm7J6b3k_F0JxPFFRTklBDOgHRJTvEa1s-uwvSwVxTs" supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-Rutas principales
+@app.route('/')
+def login():
+    return render_template('login.html')
 
-@app.route('/') def login(): return render_template('login.html')
+@app.route('/inicio', methods=['POST'])
+def inicio():
+    usuario = request.form['usuario']
+    contrasena = request.form['contrasena']
+    
+    if usuario == 'admin' and contrasena == 'admin123':
+        session['usuario'] = usuario
+        return redirect(url_for('panel'))
+    else:
+        return render_template('login.html', error='Credenciales incorrectas')
 
-@app.route('/panel_guerrero') def panel_guerrero(): busqueda = request.args.get('busqueda', '') if busqueda: permisos = supabase.table('permisos_guerrero').select('').ilike('serie', f'%{busqueda}%').execute().data else: permisos = supabase.table('permisos_guerrero').select('').execute().data
+@app.route('/panel')
+def panel():
+    if 'usuario' in session:
+        return render_template('panel.html')
+    else:
+        return redirect(url_for('login'))
 
-for permiso in permisos:
-    fecha_vencimiento = datetime.strptime(permiso['fecha_vencimiento'], '%d/%m/%Y')
-    permiso['estatus'] = 'VIGENTE' if fecha_vencimiento >= datetime.now() else 'VENCIDO'
+@app.route('/registrar_permiso', methods=['GET', 'POST'])
+def registrar_permiso():
+    if request.method == 'POST':
+        marca = request.form['marca']
+        linea = request.form['linea']
+        anio = request.form['anio']
+        color = request.form['color']
+        serie = request.form['serie']
+        motor = request.form['motor']
+        contribuyente = request.form['contribuyente']
+        tipo_vehiculo = request.form['tipo_vehiculo']
+        
+        fecha_expedicion = datetime.now().strftime("%Y-%m-%d")
+        fecha_vencimiento = (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d")
+        
+        # Generar un folio automático (ejemplo sencillo)
+        folio = f"DB{datetime.now().strftime('%d%H%M')}"
+        
+        supabase.table('permisos').insert({
+            "folio": folio,
+            "marca": marca,
+            "linea": linea,
+            "anio": anio,
+            "color": color,
+            "serie": serie,
+            "motor": motor,
+            "contribuyente": contribuyente,
+            "tipo_vehiculo": tipo_vehiculo,
+            "fecha_expedicion": fecha_expedicion,
+            "fecha_vencimiento": fecha_vencimiento
+        }).execute()
+        
+        return redirect(url_for('ver_permiso', folio=folio))
+    
+    return render_template('registro.html')
 
-return render_template('panel_guerrero.html', permisos=permisos)
+@app.route('/verificar/<folio>')
+def ver_permiso(folio):
+    data = supabase.table('permisos').select('*').eq('folio', folio).execute()
+    if data.data:
+        permiso = data.data[0]
+        return render_template('permiso.html', permiso=permiso)
+    else:
+        return "Permiso no encontrado"
 
-@app.route('/registrar_guerrero', methods=['GET', 'POST']) def registrar_guerrero(): if request.method == 'POST': datos = { 'folio': generar_folio(), 'fecha_expedicion': datetime.now().strftime('%d/%m/%Y'), 'fecha_vencimiento': (datetime.now() + timedelta(days=30)).strftime('%d/%m/%Y'), 'marca': request.form['marca'].upper(), 'linea': request.form['linea'].upper(), 'anio': request.form['anio'], 'color': request.form['color'].upper(), 'serie': request.form['serie'].upper(), 'motor': request.form['motor'].upper(), 'contribuyente': request.form['contribuyente'].upper(), 'tipo_vehiculo': request.form['tipo_vehiculo'].upper() } supabase.table('permisos_guerrero').insert(datos).execute() return redirect(url_for('panel_guerrero')) return render_template('registro_guerrero.html')
+@app.route('/cerrar_sesion')
+def cerrar_sesion():
+    session.pop('usuario', None)
+    return redirect(url_for('login'))
 
-@app.route('/editar_guerrero/<folio>', methods=['GET', 'POST']) def editar_guerrero(folio): permiso = buscar_permiso(folio) if request.method == 'POST': actualizar = { 'marca': request.form['marca'].upper(), 'linea': request.form['linea'].upper(), 'anio': request.form['anio'], 'color': request.form['color'].upper(), 'serie': request.form['serie'].upper(), 'motor': request.form['motor'].upper(), 'contribuyente': request.form['contribuyente'].upper(), 'tipo_vehiculo': request.form['tipo_vehiculo'].upper() } supabase.table('permisos_guerrero').update(actualizar).eq('folio', folio).execute() return redirect(url_for('panel_guerrero')) return render_template('editar_guerrero.html', permiso=permiso)
-
-@app.route('/eliminar_guerrero/<folio>', methods=['POST']) def eliminar_guerrero(folio): supabase.table('permisos_guerrero').delete().eq('folio', folio).execute() return redirect(url_for('panel_guerrero'))
-
-@app.route('/generar_pdf_guerrero/<folio>') def generar_pdf_guerrero(folio): permiso = buscar_permiso(folio) # Aquí iría tu lógica para generar el PDF basado en el permiso return f"Generar PDF para {folio} (aquí iría la lógica)"
-
-@app.route('/verificar_folio/<folio>') def verificar_folio(folio): permiso = buscar_permiso(folio) if permiso: return render_template('resultado_verificador.html', permiso=permiso) else: return "Permiso no encontrado", 404
-
-@app.route('/cerrar_sesion') def cerrar_sesion(): session.clear() return redirect(url_for('login'))
-
-Funciones auxiliares
-
-def buscar_permiso(folio): result = supabase.table('permisos_guerrero').select('*').eq('folio', folio).execute() if result.data: return result.data[0] else: return None
-
-def generar_folio(): ahora = datetime.now() return ahora.strftime('%d%m%Y%H%M%S')
-
-if name == "main": app.run(debug=True)
-
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=10000)
