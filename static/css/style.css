@@ -1,0 +1,88 @@
+/* Fondo institucional con patrón */
+body {
+    background-image: url('../img/fondo_grecas.png'); /* reemplaza por tu imagen de fondo */
+    background-size: contain;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Caja blanca centrada */
+.container {
+    background-color: #fff;
+    margin: 30px auto;
+    padding: 20px;
+    max-width: 600px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px #ccc;
+}
+
+/* Títulos */
+h1, h2 {
+    text-align: center;
+    color: #800000;
+}
+
+/* Formularios */
+form input[type="text"],
+form input[type="number"],
+form input[type="password"],
+form textarea,
+form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Botones generales */
+button, .btn {
+    background-color: #800000;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+}
+
+button:hover, .btn:hover {
+    background-color: #600000;
+}
+
+/* Botones secundarios */
+.btn-verde {
+    background-color: #4CAF50;
+}
+.btn-verde:hover {
+    background-color: #3e8e41;
+}
+
+.btn-rojo {
+    background-color: #f44336;
+}
+.btn-rojo:hover {
+    background-color: #c62828;
+}
+
+.btn-amarillo {
+    background-color: #fdd835;
+    color: #333;
+}
+.btn-amarillo:hover {
+    background-color: #fbc02d;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    background-color: #f1f1f1;
+    color: #333;
+    padding: 10px;
+    margin-top: 30px;
+}
