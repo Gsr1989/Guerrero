@@ -69,7 +69,7 @@
     <div class="login-container">
         <div class="login-box">
             <div class="login-title">Licencias y Permisos Municipales</div>
-            <form method="POST" action="/inicio">
+            <form method="POST" action="{{ url_for('inicio') }}">
                 <label for="usuario">Usuario:</label>
                 <input type="text" id="usuario" name="usuario" required>
                 <label for="contrasena">Contraseña:</label>
