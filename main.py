@@ -7,13 +7,18 @@ from PIL import Image
 app = Flask(__name__)
 app.secret_key = 'clave_muy_segura_123456'
 
-# Conexión REAL a tu Supabase
+# Conexión real a Supabase
 SUPABASE_URL = "https://iuwsippnvyynwnxanwnv.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1d3NpcHBudnl5bndueGFud252Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU2NDU3MDcsImV4cCI6MjA2MTIyMTcwN30.bm7J6b3k_F0JxPFFRTklBDOgHRJTvEa1s-uwvSwVxTs"
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 OUTPUT_DIR = "static/pdfs"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+# Página principal redirige a login
+@app.route('/')
+def index():
+    return redirect('/login')
 
 # LOGIN
 @app.route('/login', methods=['GET', 'POST'])
@@ -68,7 +73,7 @@ def registrar_guerrero():
 
     return render_template('formulario_guerrero.html')
 
-# VERIFICADOR PÚBLICO
+# VERIFICACIÓN
 @app.route('/verificar_folio/<folio>')
 def verificar_folio(folio):
     data = supabase.table("permisos_guerrero").select("*").eq("folio", folio.upper()).execute().data
@@ -100,7 +105,7 @@ def eliminar_guerrero(folio):
     supabase.table("permisos_guerrero").delete().eq("folio", folio.upper()).execute()
     return redirect('/panel_guerrero')
 
-# DESCARGAR PLANTILLA SIN ACTIVAR
+# DESCARGAR PLANTILLA EN BLANCO
 @app.route('/descargar_plantilla/<folio>')
 def descargar_plantilla(folio):
     plantilla_path = "plantillas/Guerrero.pdf"
@@ -110,7 +115,7 @@ def descargar_plantilla(folio):
     doc.save(output_path)
     return send_file(output_path, as_attachment=True)
 
-# GENERAR RECIBO DE PAGO
+# GENERAR RECIBO
 @app.route('/generar_recibo/<folio>')
 def generar_recibo(folio):
     data = supabase.table("permisos_guerrero").select("*").eq("folio", folio.upper()).execute().data
@@ -129,7 +134,7 @@ def generar_recibo(folio):
     doc.save(output_path)
     return send_file(output_path, as_attachment=True)
 
-# GENERAR QR DINÁMICO
+# QR DINÁMICO
 def generar_qr(folio):
     folio = folio.upper()
     qr = qrcode.make(f"https://tusitio.com/verificar_folio/{folio}")
