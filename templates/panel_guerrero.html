@@ -1,51 +1,103 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Panel de Permisos</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: center;
-        }
-        .vigente { color: green; }
-        .vencido { color: red; }
-        .acciones a {
-            margin: 0 5px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Permisos Emitidos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style_login.css') }}">
+  <style>
+    body {
+      background-image: url("{{ url_for('static', filename='img/fondo_grecas.png') }}");
+      background-size: cover;
+      background-repeat: repeat;
+      font-family: Arial, sans-serif;
+    }
+
+    .contenedor {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+      text-align: center;
+      background-color: #0073b7;
+      color: white;
+      padding: 12px;
+      border-radius: 5px;
+      font-size: 18px;
+    }
+
+    a.boton {
+      display: inline-block;
+      margin: 10px 5px;
+      background-color: #0073b7;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .vigente { color: green; font-weight: bold; }
+    .vencido { color: red; font-weight: bold; }
+
+    .acciones a {
+      text-decoration: none;
+      margin: 0 5px;
+      color: #0073b7;
+    }
+  </style>
 </head>
 <body>
+  <div class="contenedor">
     <h2>Permisos Emitidos</h2>
-    <a href="/registrar_guerrero">+ Nuevo Permiso</a> | <a href="/cerrar_sesion">Cerrar Sesión</a>
+    <div style="text-align: center;">
+      <a href="/registrar_guerrero" class="boton">+ Nuevo Permiso</a>
+      <a href="/cerrar_sesion" class="boton">Cerrar Sesión</a>
+    </div>
+
     <table>
-        <tr>
-            <th>Folio</th>
-            <th>Expedición</th>
-            <th>Estatus</th>
-            <th>Marca</th>
-            <th>Acciones</th>
-        </tr>
-        {% for permiso in permisos %}
-        <tr>
-            <td style="color: red;">{{ permiso.folio }}</td>
-            <td>{{ permiso.fecha_expedicion }}</td>
-            <td class="{{ 'vigente' if permiso.estatus == 'VIGENTE' else 'vencido' }}">{{ permiso.estatus }}</td>
-            <td>{{ permiso.marca }}</td>
-            <td class="acciones">
-                <a href="/verificar_folio/{{ permiso.folio }}">Ver</a>
-                <a href="/editar_guerrero/{{ permiso.folio }}">Editar</a>
-                <a href="/eliminar_guerrero/{{ permiso.folio }}">Eliminar</a>
-            </td>
-        </tr>
-        {% endfor %}
+      <tr>
+        <th>Folio</th>
+        <th>Expedición</th>
+        <th>Estatus</th>
+        <th>Marca</th>
+        <th>Acciones</th>
+      </tr>
+      {% for permiso in permisos %}
+      <tr>
+        <td style="color: red; font-weight: bold;">{{ permiso.folio }}</td>
+        <td>{{ permiso.fecha_expedicion }}</td>
+        <td class="{{ 'vigente' if permiso.estatus == 'VIGENTE' else 'vencido' }}">{{ permiso.estatus }}</td>
+        <td>{{ permiso.marca }}</td>
+        <td class="acciones">
+          <a href="/verificar_folio/{{ permiso.folio }}">Ver</a>
+          <a href="/editar_guerrero/{{ permiso.folio }}">Editar</a>
+          <a href="/eliminar_guerrero/{{ permiso.folio }}">Eliminar</a>
+        </td>
+      </tr>
+      {% endfor %}
     </table>
+  </div>
 </body>
 </html>
