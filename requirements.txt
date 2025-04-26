@@ -4,3 +4,4 @@ pytz
 PyMuPDF
 qrcode
 Pillow
+gunicorn
