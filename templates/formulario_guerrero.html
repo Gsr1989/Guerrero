@@ -1,103 +1,135 @@
-<!-- templates/panel_guerrero.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Panel de Permisos</title>
+    <title>Registrar Nuevo Permiso</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body {
-            background-image: url("{{ url_for('static', filename='img/fondo_grecas.png') }}");
+            background-image: url('{{ url_for('static', filename='img/fondo_grecas.png') }}');
             background-repeat: repeat;
+            background-size: cover;
             font-family: Arial, sans-serif;
-            margin: 0; padding: 0;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
         }
         .header {
+            background: #0073b7;
+            color: white;
+            padding: 15px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .header img {
+            height: 24px;
+            margin-right: 10px;
+        }
+        form {
+            padding: 20px;
+        }
+        label {
+            font-size: 14px;
+            margin-top: 10px;
+            display: block;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        button {
+            width: 100%;
             background-color: #0073b7;
             color: white;
             padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005f8a;
+        }
+        .back {
             text-align: center;
+            margin-top: 15px;
         }
-        .actions {
-            margin: 15px;
-            display: flex;
-            justify-content: space-between;
-        }
-        .actions a {
-            background-color: #28a745;
-            color: white;
-            padding: 8px 12px;
+        .back a {
+            color: #0073b7;
             text-decoration: none;
-            border-radius: 4px;
-        }
-        table {
-            width: 90%;
-            margin: 0 auto 30px auto;
-            border-collapse: collapse;
-            background-color: rgba(255,255,255,0.8);
-        }
-        th, td {
-            padding: 8px 12px;
-            border: 1px solid #ccc;
-            text-align: left;
             font-size: 14px;
         }
-        th {
-            background-color: #f0f0f0;
-        }
-        .logout {
-            background-color: #dc3545;
-            color: white;
-            padding: 6px 10px;
-            text-decoration: none;
-            border-radius: 4px;
+        footer {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 30px;
+            color: #333;
         }
     </style>
 </head>
 <body>
+
+<div class="container">
     <div class="header">
-        <h1>Panel de Permisos Municipales</h1>
+        <img src="{{ url_for('static', filename='img/user_icon.png') }}" alt="Icono">
+        Registrar Permiso
     </div>
-    <div class="actions">
-        <a href="{{ url_for('registrar_guerrero') }}">+ Nuevo Permiso</a>
-        <a href="{{ url_for('cerrar_sesion') }}" class="logout">Cerrar Sesión</a>
+
+    <form method="POST" action="{{ url_for('registrar_guerrero') }}">
+        <label for="marca">Marca</label>
+        <input type="text" id="marca" name="marca" placeholder="Ingresa la Marca" required>
+
+        <label for="linea">Línea</label>
+        <input type="text" id="linea" name="linea" placeholder="Ingresa la Línea" required>
+
+        <label for="anio">Modelo</label>
+        <input type="number" id="anio" name="anio" placeholder="Ingresa el Modelo" required>
+
+        <label for="color">Color</label>
+        <input type="text" id="color" name="color" placeholder="Ingresa el Color" required>
+
+        <label for="serie">Número de Serie</label>
+        <input type="text" id="serie" name="serie" placeholder="Ingresa el número de Serie" required>
+
+        <label for="motor">Número de Motor</label>
+        <input type="text" id="motor" name="motor" placeholder="Ingresa el número de Motor" required>
+
+        <label for="contribuyente">Nombre del Contribuyente</label>
+        <input type="text" id="contribuyente" name="contribuyente" placeholder="Ingresa el nombre del Contribuyente" required>
+
+        <label for="tipo_vehiculo">Tipo de Vehículo</label>
+        <select id="tipo_vehiculo" name="tipo_vehiculo" required>
+            <option value="">Seleccione una opción</option>
+            <option value="AUTOMÓVIL">Automóvil</option>
+            <option value="MOTOCICLETA">Motocicleta</option>
+        </select>
+
+        <button type="submit">Generar Permiso</button>
+    </form>
+
+    <div class="back">
+        <a href="{{ url_for('panel_guerrero') }}">Volver al Panel</a>
     </div>
-    <table>
-        <thead>
-            <tr>
-                <th>Folio</th>
-                <th>Marca</th>
-                <th>Línea</th>
-                <th>Año</th>
-                <th>Color</th>
-                <th>Serie</th>
-                <th>Motor</th>
-                <th>Contribuyente</th>
-                <th>Tipo</th>
-                <th>Expedición</th>
-                <th>Vencimiento</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for p in permisos %}
-            <tr>
-                <td>{{ p.folio }}</td>
-                <td>{{ p.marca }}</td>
-                <td>{{ p.linea }}</td>
-                <td>{{ p.anio }}</td>
-                <td>{{ p.color }}</td>
-                <td>{{ p.serie }}</td>
-                <td>{{ p.motor }}</td>
-                <td>{{ p.contribuyente }}</td>
-                <td>{{ p.tipo_vehiculo }}</td>
-                <td>{{ p.fecha_expedicion }}</td>
-                <td>{{ p.fecha_vencimiento }}</td>
-            </tr>
-            {% endfor %}
-            {% if permisos|length == 0 %}
-            <tr><td colspan="11" style="text-align:center;">No hay permisos registrados.</td></tr>
-            {% endif %}
-        </tbody>
-    </table>
+</div>
+
+<footer>
+    TRÁNSITO MUNICIPAL DE <strong>TLAPA DE COMONFORT</strong>
+</footer>
+
 </body>
 </html>
