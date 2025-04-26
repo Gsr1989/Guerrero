@@ -4,93 +4,106 @@
     <meta charset="UTF-8">
     <title>Verificador de Permiso</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
         body {
-            background-image: url('{{ url_for('static', filename='img/fondo_grecas.png') }}');
-            background-size: contain;
             font-family: Arial, sans-serif;
+            background-image: url("{{ url_for('static', filename='css/img/fondo_grecas.png') }}");
+            background-size: cover;
+            background-repeat: repeat;
             margin: 0;
             padding: 0;
-            background-color: #eef0f1;
         }
         .container {
-            max-width: 600px;
-            background: white;
-            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 10px;
             padding: 20px;
-            border: 1px solid #ccc;
+            margin: 20px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0px 0px 10px #ccc;
         }
-        .header-img {
+        .header {
             text-align: center;
-            margin-bottom: 10px;
+            margin-top: 20px;
         }
-        .header-img img {
-            max-width: 90%;
-            height: auto;
+        .header img {
+            width: 90%;
+            max-width: 400px;
         }
-        .title {
+        .titulo-azul {
             background-color: #0073b7;
             color: white;
-            padding: 10px;
-            font-weight: bold;
             text-align: center;
+            padding: 8px;
             border-radius: 5px 5px 0 0;
+            margin-top: 10px;
+            font-weight: bold;
         }
-        .datos {
-            padding: 15px;
-            font-size: 16px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
         }
-        .datos p {
-            margin: 8px 0;
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
         }
-        .footer {
+        .subtitulo {
+            background-color: #0073b7;
+            color: white;
             text-align: center;
+            padding: 8px;
+            font-weight: bold;
             margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid #ccc;
         }
-        .footer img {
-            width: 100px;
-            margin: 10px;
+        .logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px;
+            gap: 20px;
         }
-        .footer-text {
+        .logos img {
+            height: 60px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 15px;
             font-size: 14px;
-            color: #333;
-            margin-top: 10px;
+            color: #666;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header-img">
-            <img src="{{ url_for('static', filename='img/guerrero_logo.png') }}" alt="Guerrero Logo">
-        </div>
+<div class="header">
+    <img src="{{ url_for('static', filename='css/img/banner_guerrero.png') }}" alt="Banner Guerrero">
+</div>
 
-        <div class="title">Verificador de Permiso</div>
+<div class="container">
+    <div class="titulo-azul">Verificador de Permiso</div>
+    <table>
+        <tr><td><strong>Marca:</strong> {{ permiso.marca }}</td></tr>
+        <tr><td><strong>Línea:</strong> {{ permiso.linea }}</td></tr>
+        <tr><td><strong>Modelo:</strong> {{ permiso.anio }}</td></tr>
+        <tr><td><strong>Color:</strong> {{ permiso.color }}</td></tr>
+        <tr><td><strong>Número de Serie:</strong> {{ permiso.serie }}</td></tr>
+        <tr><td><strong>Número de Motor:</strong> {{ permiso.motor }}</td></tr>
+        <tr><td><strong>Fecha Expedición:</strong> {{ permiso.fecha_expedicion }}</td></tr>
+        <tr><td><strong>Fecha Vencimiento:</strong> {{ permiso.fecha_vencimiento }}</td></tr>
+    </table>
+    <div class="subtitulo">Permiso de Tránsito Municipal</div>
 
-        <div class="datos">
-            <p><strong>Marca:</strong> {{ permiso.marca }}</p>
-            <p><strong>Línea:</strong> {{ permiso.linea }}</p>
-            <p><strong>Modelo:</strong> {{ permiso.anio }}</p>
-            <p><strong>Color:</strong> {{ permiso.color }}</p>
-            <p><strong>Número de Serie:</strong> {{ permiso.serie }}</p>
-            <p><strong>Número de Motor:</strong> {{ permiso.motor }}</p>
-            <p><strong>Fecha Expedición:</strong> {{ permiso.fecha_expedicion }}</p>
-            <p><strong>Fecha Vencimiento:</strong> {{ permiso.fecha_vencimiento }}</p>
-        </div>
-
-        <div class="title">Permiso de Tránsito Municipal</div>
-
-        <div class="footer">
-            <img src="{{ url_for('static', filename='img/tlapa_logo.png') }}" alt="Tlapa Logo">
-            <img src="{{ url_for('static', filename='img/guerrero_icon.png') }}" alt="Icon Guerrero">
-            <div class="footer-text">
-                LTM | Tlapa de Comonfort Gro.
-            </div>
-        </div>
+    <div class="logos">
+        <img src="{{ url_for('static', filename='css/img/logo_tlapa.png') }}" alt="Logo Tlapa">
+        <img src="{{ url_for('static', filename='css/img/logo_guerrero.png') }}" alt="Logo Guerrero">
     </div>
+
+    <footer>
+        LTM | Tlapa de Comonfort Gro.
+    </footer>
+</div>
 
 </body>
 </html>
