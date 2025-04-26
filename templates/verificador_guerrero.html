@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Permiso Digital</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background-color: #eef0f1;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+        h2 {
+            text-align: center;
+            color: #800000;
+        }
+        .dato {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Permiso de Tránsito Municipal</h2>
+        <p class="dato"><strong>Folio:</strong> {{ permiso.folio }}</p>
+        <p class="dato"><strong>Marca:</strong> {{ permiso.marca }}</p>
+        <p class="dato"><strong>Línea:</strong> {{ permiso.linea }}</p>
+        <p class="dato"><strong>Modelo:</strong> {{ permiso.anio }}</p>
+        <p class="dato"><strong>Color:</strong> {{ permiso.color }}</p>
+        <p class="dato"><strong>Serie:</strong> {{ permiso.serie }}</p>
+        <p class="dato"><strong>Motor:</strong> {{ permiso.motor }}</p>
+        <p class="dato"><strong>Contribuyente:</strong> {{ permiso.contribuyente }}</p>
+        <p class="dato"><strong>Fecha Expedición:</strong> {{ permiso.fecha_expedicion }}</p>
+        <p class="dato"><strong>Fecha Vencimiento:</strong> {{ permiso.fecha_vencimiento }}</p>
+    </div>
+</body>
+</html>
