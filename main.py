@@ -10,20 +10,17 @@ SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        usuario = request.form['usuario']
+        contrasena = request.form['contrasena']
+        if usuario == 'admin' and contrasena == 'admin123':
+            session['usuario'] = usuario
+            return redirect(url_for('panel'))
+        else:
+            return render_template('login.html', error='Credenciales incorrectas')
     return render_template('login.html')
-
-@app.route('/inicio', methods=['POST'])
-def inicio():
-    usuario = request.form['usuario']
-    contrasena = request.form['contrasena']
-    
-    if usuario == 'admin' and contrasena == 'admin123':
-        session['usuario'] = usuario
-        return redirect(url_for('panel'))
-    else:
-        return render_template('login.html', error='Credenciales incorrectas')
 
 @app.route('/panel')
 def panel():
@@ -34,6 +31,9 @@ def panel():
 
 @app.route('/registrar_permiso', methods=['GET', 'POST'])
 def registrar_permiso():
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+
     if request.method == 'POST':
         marca = request.form['marca']
         linea = request.form['linea']
@@ -49,7 +49,7 @@ def registrar_permiso():
         
         # Generar un folio automático (ejemplo sencillo)
         folio = f"DB{datetime.now().strftime('%d%H%M')}"
-        
+
         supabase.table('permisos').insert({
             "folio": folio,
             "marca": marca,
