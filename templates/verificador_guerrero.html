@@ -34,16 +34,22 @@
             font-weight: bold;
             border-radius: 5px;
         }
+        .white-box {
+            background: white;
+            padding: 10px 15px;
+            margin-top: 10px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 8px rgba(0,0,0,0.1);
+        }
         table {
             width: 100%;
-            margin-top: 10px;
             font-size: 18px;
             border-collapse: collapse;
-            background: transparent;
         }
         td {
             padding: 8px;
             text-align: left;
+            border-bottom: 1px solid #eee;
         }
         td:first-child {
             font-weight: bold;
@@ -86,16 +92,18 @@
 
         <div class="section-title">Verificador de Permiso</div>
 
-        <table>
-            <tr><td>Marca:</td><td>{{ permiso.marca }}</td></tr>
-            <tr><td>Línea:</td><td>{{ permiso.linea }}</td></tr>
-            <tr><td>Modelo:</td><td>{{ permiso.anio }}</td></tr>
-            <tr><td>Color:</td><td>{{ permiso.color }}</td></tr>
-            <tr><td>Número de Serie:</td><td>{{ permiso.serie }}</td></tr>
-            <tr><td>Número de Motor:</td><td>{{ permiso.motor }}</td></tr>
-            <tr><td>Fecha Expedición:</td><td>{{ permiso.fecha_expedicion }}</td></tr>
-            <tr><td>Fecha Vencimiento:</td><td>{{ permiso.fecha_vencimiento }}</td></tr>
-        </table>
+        <div class="white-box">
+            <table>
+                <tr><td>Marca:</td><td>{{ permiso.marca }}</td></tr>
+                <tr><td>Línea:</td><td>{{ permiso.linea }}</td></tr>
+                <tr><td>Modelo:</td><td>{{ permiso.anio }}</td></tr>
+                <tr><td>Color:</td><td>{{ permiso.color }}</td></tr>
+                <tr><td>Número de Serie:</td><td>{{ permiso.serie }}</td></tr>
+                <tr><td>Número de Motor:</td><td>{{ permiso.motor }}</td></tr>
+                <tr><td>Fecha Expedición:</td><td>{{ permiso.fecha_expedicion }}</td></tr>
+                <tr><td>Fecha Vencimiento:</td><td>{{ permiso.fecha_vencimiento }}</td></tr>
+            </table>
+        </div>
 
         <div class="footer-button">Permiso de Tránsito Municipal</div>
 
