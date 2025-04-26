@@ -7,14 +7,15 @@ from PIL import Image
 app = Flask(__name__)
 app.secret_key = 'clave_muy_segura_123456'
 
-SUPABASE_URL = "https://axgqvhgtbzkraytzaomw.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+# Conexión REAL a tu Supabase
+SUPABASE_URL = "https://iuwsippnvyynwnxanwnv.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1d3NpcHBudnl5bndueGFud252Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU2NDU3MDcsImV4cCI6MjA2MTIyMTcwN30.bm7J6b3k_F0JxPFFRTklBDOgHRJTvEa1s-uwvSwVxTs"
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 OUTPUT_DIR = "static/pdfs"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# Login simple
+# LOGIN
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -32,7 +33,7 @@ def cerrar_sesion():
     session.clear()
     return redirect('/login')
 
-# Panel
+# PANEL
 @app.route('/panel_guerrero')
 def panel_guerrero():
     if 'usuario' not in session:
@@ -44,7 +45,7 @@ def panel_guerrero():
         permiso['estatus'] = 'VIGENTE' if vencimiento >= hoy else 'VENCIDO'
     return render_template("panel_guerrero.html", permisos=data)
 
-# Registro
+# REGISTRO
 @app.route('/registrar_guerrero', methods=['GET', 'POST'])
 def registrar_guerrero():
     if 'usuario' not in session:
@@ -67,7 +68,7 @@ def registrar_guerrero():
 
     return render_template('formulario_guerrero.html')
 
-# Verificación pública
+# VERIFICADOR PÚBLICO
 @app.route('/verificar_folio/<folio>')
 def verificar_folio(folio):
     data = supabase.table("permisos_guerrero").select("*").eq("folio", folio.upper()).execute().data
@@ -76,7 +77,7 @@ def verificar_folio(folio):
         return render_template("verificador_guerrero.html", permiso=permiso)
     return "Folio no encontrado"
 
-# Editar
+# EDITAR
 @app.route('/editar_guerrero/<folio>', methods=['GET', 'POST'])
 def editar_guerrero(folio):
     if 'usuario' not in session:
@@ -91,7 +92,7 @@ def editar_guerrero(folio):
     permiso = {k: v.upper() if isinstance(v, str) else v for k, v in data[0].items()}
     return render_template("editar_guerrero.html", permiso=permiso)
 
-# Eliminar
+# ELIMINAR
 @app.route('/eliminar_guerrero/<folio>')
 def eliminar_guerrero(folio):
     if 'usuario' not in session:
@@ -99,7 +100,7 @@ def eliminar_guerrero(folio):
     supabase.table("permisos_guerrero").delete().eq("folio", folio.upper()).execute()
     return redirect('/panel_guerrero')
 
-# Descargar plantilla sin activar
+# DESCARGAR PLANTILLA SIN ACTIVAR
 @app.route('/descargar_plantilla/<folio>')
 def descargar_plantilla(folio):
     plantilla_path = "plantillas/Guerrero.pdf"
@@ -109,7 +110,7 @@ def descargar_plantilla(folio):
     doc.save(output_path)
     return send_file(output_path, as_attachment=True)
 
-# Descargar recibo
+# GENERAR RECIBO DE PAGO
 @app.route('/generar_recibo/<folio>')
 def generar_recibo(folio):
     data = supabase.table("permisos_guerrero").select("*").eq("folio", folio.upper()).execute().data
@@ -128,7 +129,7 @@ def generar_recibo(folio):
     doc.save(output_path)
     return send_file(output_path, as_attachment=True)
 
-# Generar QR dinámico
+# GENERAR QR DINÁMICO
 def generar_qr(folio):
     folio = folio.upper()
     qr = qrcode.make(f"https://tusitio.com/verificar_folio/{folio}")
@@ -136,7 +137,7 @@ def generar_qr(folio):
     qr.save(buffer, format='PNG')
     return buffer.getvalue()
 
-# Generador de folios únicos tipo DB3325
+# FOLIO ÚNICO
 def generar_folio():
     import random
     letras = "DB"
