@@ -1,56 +1,103 @@
+<!-- templates/panel_guerrero.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Panel de Permisos</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+    <meta charset="UTF-8">
+    <title>Panel de Permisos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='img/fondo_grecas.png') }}");
+            background-repeat: repeat;
+            font-family: Arial, sans-serif;
+            margin: 0; padding: 0;
+        }
+        .header {
+            background-color: #0073b7;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        .actions {
+            margin: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .actions a {
+            background-color: #28a745;
+            color: white;
+            padding: 8px 12px;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        table {
+            width: 90%;
+            margin: 0 auto 30px auto;
+            border-collapse: collapse;
+            background-color: rgba(255,255,255,0.8);
+        }
+        th, td {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            text-align: left;
+            font-size: 14px;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        .logout {
+            background-color: #dc3545;
+            color: white;
+            padding: 6px 10px;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>Panel de Permisos</h1>
-    <a href="{{ url_for('cerrar_sesion') }}">Cerrar sesión</a>
-  </header>
-
-  <main>
-    <section class="acciones">
-      <a href="{{ url_for('registrar_guerrero') }}">
-        <button>+ Nuevo Permiso</button>
-      </a>
-    </section>
-
-    <section class="lista-permisos">
-      <table>
+    <div class="header">
+        <h1>Panel de Permisos Municipales</h1>
+    </div>
+    <div class="actions">
+        <a href="{{ url_for('registrar_guerrero') }}">+ Nuevo Permiso</a>
+        <a href="{{ url_for('cerrar_sesion') }}" class="logout">Cerrar Sesión</a>
+    </div>
+    <table>
         <thead>
-          <tr>
-            <th>Folio</th>
-            <th>Marca</th>
-            <th>Línea</th>
-            <th>Año</th>
-            <th>Expedición</th>
-            <th>Vencimiento</th>
-            <th>Acciones</th>
-          </tr>
+            <tr>
+                <th>Folio</th>
+                <th>Marca</th>
+                <th>Línea</th>
+                <th>Año</th>
+                <th>Color</th>
+                <th>Serie</th>
+                <th>Motor</th>
+                <th>Contribuyente</th>
+                <th>Tipo</th>
+                <th>Expedición</th>
+                <th>Vencimiento</th>
+            </tr>
         </thead>
         <tbody>
-          {% for p in permisos %}
+            {% for p in permisos %}
             <tr>
-              <td>{{ p.folio }}</td>
-              <td>{{ p.marca }}</td>
-              <td>{{ p.linea }}</td>
-              <td>{{ p.anio }}</td>
-              <td>{{ p.fecha_expedicion }}</td>
-              <td>{{ p.fecha_vencimiento }}</td>
-              <td>
-                <a href="{{ url_for('verificar_guerrero', folio=p.folio) }}">Ver</a>
-              </td>
+                <td>{{ p.folio }}</td>
+                <td>{{ p.marca }}</td>
+                <td>{{ p.linea }}</td>
+                <td>{{ p.anio }}</td>
+                <td>{{ p.color }}</td>
+                <td>{{ p.serie }}</td>
+                <td>{{ p.motor }}</td>
+                <td>{{ p.contribuyente }}</td>
+                <td>{{ p.tipo_vehiculo }}</td>
+                <td>{{ p.fecha_expedicion }}</td>
+                <td>{{ p.fecha_vencimiento }}</td>
             </tr>
-          {% else %}
-            <tr><td colspan="7">No hay permisos registrados.</td></tr>
-          {% endfor %}
+            {% endfor %}
+            {% if permisos|length == 0 %}
+            <tr><td colspan="11" style="text-align:center;">No hay permisos registrados.</td></tr>
+            {% endif %}
         </tbody>
-      </table>
-    </section>
-  </main>
+    </table>
 </body>
 </html>
