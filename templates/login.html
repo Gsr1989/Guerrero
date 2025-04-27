@@ -2,30 +2,19 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Iniciar Sesión - Guerrero</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body style="background-image: url('{{ url_for('static', filename='img/fondo_grecas.png') }}'); background-size: cover;">
+<body>
+    <h2>Iniciar Sesión</h2>
+    <form method="POST" action="/">
+        <label>Usuario:</label><br>
+        <input type="text" name="user" required><br><br>
 
-<div class="login-container">
-    <div class="login-box">
-        <div class="login-title">Licencias y Permisos Municipales</div>
-        <form method="POST">
-            <label>Usuario:</label>
-            <input type="text" name="user" required>
+        <label>Contraseña:</label><br>
+        <input type="password" name="pass" required><br><br>
 
-            <label>Contraseña:</label>
-            <input type="password" name="pass" required>
-
-            <button type="submit">Ingresar</button>
-        </form>
-    </div>
-</div>
-
-<footer>
-    Municipio de Tlapa de Comonfort
-</footer>
-
+        <button type="submit">Ingresar</button>
+    </form>
 </body>
 </html>
