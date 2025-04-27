@@ -2,52 +2,58 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Panel de Permisos - Guerrero</title>
+    <title>Panel de Permisos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
-    <h2>Panel de Permisos</h2>
-
-    <a href="{{ url_for('formulario_guerrero') }}">Registrar nuevo permiso</a><br><br>
-    <a href="{{ url_for('cerrar_sesion') }}">Cerrar sesión</a><br><br>
-
-    <h3>Permisos registrados:</h3>
-
-    {% if permisos %}
-    <table border="1" cellpadding="5">
-        <thead>
-            <tr>
-                <th>Folio</th>
-                <th>Marca</th>
-                <th>Línea</th>
-                <th>Año</th>
-                <th>Serie</th>
-                <th>Motor</th>
-                <th>Color</th>
-                <th>Nombre</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for permiso in permisos %}
-            <tr>
-                <td>{{ permiso.folio }}</td>
-                <td>{{ permiso.marca }}</td>
-                <td>{{ permiso.linea }}</td>
-                <td>{{ permiso.anio }}</td>
-                <td>{{ permiso.serie }}</td>
-                <td>{{ permiso.motor }}</td>
-                <td>{{ permiso.color }}</td>
-                <td>{{ permiso.nombre }}</td>
-                <td>
-                    <a href="{{ url_for('descargar', folio=permiso.folio) }}">Descargar PDF</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p>No hay permisos registrados todavía.</p>
-    {% endif %}
+<body style="background-image: url('{{ url_for('static', filename='img/fondo_grecas.png') }}'); background-size: cover;">
+<header class="header">
+    <h1>Panel de Permisos Municipales</h1>
+</header>
+<div class="actions">
+    <a href="{{ url_for('formulario_guerrero') }}">+ Nuevo Permiso</a>
+    <a href="{{ url_for('logout') }}" class="logout">Cerrar Sesión</a>
+</div>
+<table>
+    <thead>
+        <tr>
+            <th>Folio</th>
+            <th>Marca</th>
+            <th>Línea</th>
+            <th>Año</th>
+            <th>Serie</th>
+            <th>Motor</th>
+            <th>Color</th>
+            <th>Contribuyente</th>
+            <th>Fecha Exp.</th>
+            <th>Fecha Venc.</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for permiso in permisos %}
+        <tr>
+            <td>{{ permiso.folio }}</td>
+            <td>{{ permiso.marca }}</td>
+            <td>{{ permiso.linea }}</td>
+            <td>{{ permiso.anio }}</td>
+            <td>{{ permiso.serie }}</td>
+            <td>{{ permiso.motor }}</td>
+            <td>{{ permiso.color }}</td>
+            <td>{{ permiso.contribuyente }}</td>
+            <td>{{ permiso.fecha_expedicion }}</td>
+            <td>{{ permiso.fecha_vencimiento }}</td>
+            <td>
+                <a href="{{ url_for('editar_guerrero', folio=permiso.folio) }}">Editar</a> |
+                <a href="{{ url_for('eliminar_guerrero', folio=permiso.folio) }}">Eliminar</a> |
+                <a href="{{ url_for('descargar_guerrero', folio=permiso.folio) }}">PDF</a>
+            </td>
+        </tr>
+        {% endfor %}
+        {% if permisos|length == 0 %}
+        <tr><td colspan="11" style="text-align:center;">No hay permisos registrados.</td></tr>
+        {% endif %}
+    </tbody>
+</table>
 </body>
 </html>
