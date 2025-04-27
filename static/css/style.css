@@ -1,88 +1,69 @@
-/* Fondo institucional con patrón */
 body {
-    background-image: url('../img/fondo_grecas.png'); /* reemplaza por tu imagen de fondo */
-    background-size: contain;
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
+    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
 }
-
-/* Caja blanca centrada */
+.login-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 60px;
+}
+.login-box {
+    width: 300px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    padding: 20px;
+}
+.login-title {
+    background-color: #0073b7;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    font-size: 17px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    margin: -20px -20px 20px -20px;
+}
 .container {
-    background-color: #fff;
-    margin: 30px auto;
+    background: white;
     padding: 20px;
     max-width: 600px;
+    margin: 30px auto;
     border-radius: 10px;
-    box-shadow: 0px 0px 10px #ccc;
+    box-shadow: 0 0 10px #ccc;
 }
-
-/* Títulos */
-h1, h2 {
-    text-align: center;
-    color: #800000;
+table {
+    width: 95%;
+    margin: auto;
+    background: white;
+    border-collapse: collapse;
+    margin-top: 20px;
 }
-
-/* Formularios */
-form input[type="text"],
-form input[type="number"],
-form input[type="password"],
-form textarea,
-form select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
+th, td {
     border: 1px solid #ccc;
-    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
 }
-
-/* Botones generales */
-button, .btn {
-    background-color: #800000;
+th {
+    background: #f0f0f0;
+}
+.actions {
+    margin: 15px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+.actions a, .logout {
+    background: #0073b7;
     color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    margin: 5px;
-    border-radius: 5px;
-    cursor: pointer;
-    display: inline-block;
     text-decoration: none;
-    text-align: center;
+    padding: 8px 12px;
+    border-radius: 5px;
 }
-
-button:hover, .btn:hover {
-    background-color: #600000;
-}
-
-/* Botones secundarios */
-.btn-verde {
-    background-color: #4CAF50;
-}
-.btn-verde:hover {
-    background-color: #3e8e41;
-}
-
-.btn-rojo {
-    background-color: #f44336;
-}
-.btn-rojo:hover {
-    background-color: #c62828;
-}
-
-.btn-amarillo {
-    background-color: #fdd835;
-    color: #333;
-}
-.btn-amarillo:hover {
-    background-color: #fbc02d;
-}
-
-/* Footer */
 footer {
     text-align: center;
-    background-color: #f1f1f1;
-    color: #333;
-    padding: 10px;
+    font-size: 12px;
     margin-top: 30px;
+    color: #333;
 }
