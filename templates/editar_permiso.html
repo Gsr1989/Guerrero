@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Permiso - Guerrero</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #800000;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+        .container {
+            padding: 20px;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #800000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #a00000;
+        }
+        a.button {
+            margin-top: 20px;
+            padding: 8px 15px;
+            background-color: gray;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Editar Permiso</h1>
+</header>
+
+<div class="container">
+    <form method="POST">
+        <label>Marca:</label>
+        <input type="text" name="marca" value="{{ permiso.marca }}" required>
+
+        <label>Línea:</label>
+        <input type="text" name="linea" value="{{ permiso.linea }}" required>
+
+        <label>Año:</label>
+        <input type="text" name="anio" value="{{ permiso.anio }}" required>
+
+        <label>Serie:</label>
+        <input type="text" name="serie" value="{{ permiso.serie }}" required>
+
+        <label>Motor:</label>
+        <input type="text" name="motor" value="{{ permiso.motor }}" required>
+
+        <label>Color:</label>
+        <input type="text" name="color" value="{{ permiso.color }}" required>
+
+        <label>Nombre del Contribuyente:</label>
+        <input type="text" name="nombre" value="{{ permiso.nombre }}" required>
+
+        <label>Fecha de Expedición:</label>
+        <input type="date" name="fecha_expedicion" value="{{ permiso.fecha_expedicion }}" required>
+
+        <label>Fecha de Vencimiento:</label>
+        <input type="date" name="fecha_vencimiento" value="{{ permiso.fecha_vencimiento }}" required>
+
+        <button type="submit">Guardar Cambios</button>
+        <a href="{{ url_for('panel') }}" class="button">Cancelar</a>
+    </form>
+</div>
+
+</body>
+</html>
