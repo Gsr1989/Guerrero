@@ -1,7 +1,6 @@
 Flask
-supabase
-pytz
-PyMuPDF
-qrcode
-Pillow
 gunicorn
+PyMuPDF
+python-dotenv
+supabase
+requests
