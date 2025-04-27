@@ -2,25 +2,67 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Lista de Permisos</title>
+    <title>Panel de Permisos Guerrero</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #004d00;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            background: white;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+        }
+        th {
+            background-color: #0073b7;
+            color: white;
+        }
+        a.boton {
+            padding: 6px 10px;
+            margin: 2px;
+            text-decoration: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 14px;
+        }
+        .editar {
+            background-color: #28a745;
+        }
+        .eliminar {
+            background-color: #dc3545;
+        }
+        .pdf {
+            background-color: #007bff;
+        }
+    </style>
 </head>
 <body>
-    <h2>Permisos Registrados</h2>
+    <h1>Panel de Permisos Guerrero</h1>
 
-    <table border="1" cellpadding="8" cellspacing="0">
+    <a href="/formulario" style="display: inline-block; margin-bottom: 20px; background-color: #004d00; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none;">+ Nuevo Permiso</a>
+    <a href="/logout" style="float: right; background-color: #dc3545; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none;">Cerrar Sesión</a>
+
+    <table>
         <thead>
             <tr>
                 <th>Folio</th>
                 <th>Marca</th>
-                <th>Línea</th>
-                <th>Año</th>
                 <th>Serie</th>
-                <th>Motor</th>
-                <th>Color</th>
-                <th>Fecha Expedición</th>
-                <th>Fecha Vencimiento</th>
-                <th>Nombre del Contribuyente</th>
+                <th>Nombre</th>
+                <th>Expedición</th>
+                <th>Vencimiento</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -29,26 +71,18 @@
             <tr>
                 <td>{{ permiso.folio }}</td>
                 <td>{{ permiso.marca }}</td>
-                <td>{{ permiso.linea }}</td>
-                <td>{{ permiso.anio }}</td>
                 <td>{{ permiso.serie }}</td>
-                <td>{{ permiso.motor }}</td>
-                <td>{{ permiso.color }}</td>
+                <td>{{ permiso.nombre_contribuyente }}</td>
                 <td>{{ permiso.fecha_expedicion }}</td>
                 <td>{{ permiso.fecha_vencimiento }}</td>
-                <td>{{ permiso.nombre_contribuyente }}</td>
                 <td>
-                    <a href="{{ url_for('editar_permiso', folio=permiso.folio) }}">Editar</a> |
-                    <a href="{{ url_for('eliminar_permiso', folio=permiso.folio) }}">Eliminar</a> |
-                    <a href="{{ url_for('generar_pdf', folio=permiso.folio) }}">Generar PDF</a>
+                    <a href="/editar/{{ permiso.id }}" class="boton editar">Editar</a>
+                    <a href="/eliminar/{{ permiso.id }}" class="boton eliminar">Eliminar</a>
+                    <a href="/pdf/{{ permiso.id }}" class="boton pdf">PDF</a>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-
-    <br>
-    <a href="{{ url_for('panel') }}">Volver al Panel Principal</a>
-
 </body>
 </html>
