@@ -1,6 +1,7 @@
 Flask
-gunicorn
-PyMuPDF
-python-dotenv
 supabase
-requests
+pytz
+PyPDF2
+qrcode
+Pillow
+gunicorn
