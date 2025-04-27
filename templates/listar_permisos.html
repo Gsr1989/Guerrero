@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Permisos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <h2>Permisos Registrados</h2>
+
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Folio</th>
+                <th>Marca</th>
+                <th>Línea</th>
+                <th>Año</th>
+                <th>Serie</th>
+                <th>Motor</th>
+                <th>Color</th>
+                <th>Fecha Expedición</th>
+                <th>Fecha Vencimiento</th>
+                <th>Nombre del Contribuyente</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for permiso in permisos %}
+            <tr>
+                <td>{{ permiso.folio }}</td>
+                <td>{{ permiso.marca }}</td>
+                <td>{{ permiso.linea }}</td>
+                <td>{{ permiso.anio }}</td>
+                <td>{{ permiso.serie }}</td>
+                <td>{{ permiso.motor }}</td>
+                <td>{{ permiso.color }}</td>
+                <td>{{ permiso.fecha_expedicion }}</td>
+                <td>{{ permiso.fecha_vencimiento }}</td>
+                <td>{{ permiso.nombre_contribuyente }}</td>
+                <td>
+                    <a href="{{ url_for('editar_permiso', folio=permiso.folio) }}">Editar</a> |
+                    <a href="{{ url_for('eliminar_permiso', folio=permiso.folio) }}">Eliminar</a> |
+                    <a href="{{ url_for('generar_pdf', folio=permiso.folio) }}">Generar PDF</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    <a href="{{ url_for('panel') }}">Volver al Panel Principal</a>
+
+</body>
+</html>
