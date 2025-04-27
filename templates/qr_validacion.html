@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Validar QR</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body style="text-align:center; font-family:Arial,sans-serif; padding-top:100px; background:#eef0f1;">
+
+<h1>Validación de Permiso</h1>
+
+{% if permiso %}
+    <h2>Permiso Válido</h2>
+    <p>Folio: {{ permiso.folio }}</p>
+    <p>Marca: {{ permiso.marca }}</p>
+    <p>Línea: {{ permiso.linea }}</p>
+    <p>Año: {{ permiso.anio }}</p>
+    <p>Serie: {{ permiso.serie }}</p>
+    <p>Motor: {{ permiso.motor }}</p>
+    <p>Color: {{ permiso.color }}</p>
+    <p>Contribuyente: {{ permiso.contribuyente }}</p>
+    <p>Fecha Expedición: {{ permiso.fecha_expedicion }}</p>
+    <p>Fecha Vencimiento: {{ permiso.fecha_vencimiento }}</p>
+{% else %}
+    <h2>Permiso No Encontrado</h2>
+{% endif %}
+
+<br>
+<a href="{{ url_for('login') }}">Ir al inicio</a>
+
+</body>
+</html>
