@@ -7,8 +7,9 @@ import os
 app = Flask(__name__)
 app.secret_key = 'clave_super_segura_2025'
 
-SUPABASE_URL = "https://axgqvhgtbzkraytzaomw.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1d3NpcHBudnl5bndueGFud252Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU2NDU3MDcsImV4cCI6MjA2MTIyMTcwN30.bm7J6b3k_F0JxPFFRTklBDOgHRJTvEa1s-uwvSwVxTs"
+# Leer credenciales desde variables de entorno
+SUPABASE_URL = os.environ.get('SUPABASE_URL')
+SUPABASE_KEY = os.environ.get('SUPABASE_KEY')
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
@@ -34,72 +35,66 @@ def inicio():
 @app.route('/panel_guerrero')
 def panel_guerrero():
     if 'usuario' in session:
-        permisos = []
         try:
-            data = supabase.table('permisos').select('*').order('fecha_expedicion', desc=True).execute()
-            if data.data:
-                permisos = data.data
+            permisos = supabase.table('permisos').select('*').order('fecha_expedicion', desc=True).execute()
+            datos = permisos.data if permisos.data else []
         except Exception as e:
-            print("Error al obtener permisos:", e)
-        return render_template('panel_guerrero.html', permisos=permisos)
+            datos = []
+        return render_template('panel_guerrero.html', permisos=datos)
     else:
         return redirect(url_for('login'))
 
 @app.route('/registrar_guerrero', methods=['GET', 'POST'])
 def registrar_guerrero():
     if request.method == 'POST':
-        try:
-            marca = request.form['marca']
-            linea = request.form['linea']
-            anio = request.form['anio']
-            color = request.form['color']
-            serie = request.form['serie']
-            motor = request.form['motor']
-            contribuyente = request.form['contribuyente']
-            tipo_vehiculo = request.form['tipo_vehiculo']
+        marca = request.form['marca']
+        linea = request.form['linea']
+        anio = request.form['anio']
+        color = request.form['color']
+        serie = request.form['serie']
+        motor = request.form['motor']
+        contribuyente = request.form['contribuyente']
+        tipo_vehiculo = request.form['tipo_vehiculo']
 
-            fecha_expedicion = datetime.now().strftime("%Y-%m-%d")
-            fecha_vencimiento = (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d")
-            folio = f"DB{datetime.now().strftime('%d%H%M%S')}"
+        fecha_expedicion = datetime.now().strftime("%Y-%m-%d")
+        fecha_vencimiento = (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d")
 
-            # Insertar en Supabase
-            supabase.table('permisos').insert({
-                "folio": folio,
-                "marca": marca,
-                "linea": linea,
-                "anio": anio,
-                "color": color,
-                "serie": serie,
-                "motor": motor,
-                "contribuyente": contribuyente,
-                "tipo_vehiculo": tipo_vehiculo,
-                "fecha_expedicion": fecha_expedicion,
-                "fecha_vencimiento": fecha_vencimiento
-            }).execute()
+        folio = f"DB{datetime.now().strftime('%d%H%M%S')}"
 
-            # Generar PDF
-            plantilla = fitz.open("static/pdf/Guerrero.pdf")
-            page = plantilla[0]
-            page.insert_text((100, 100), f"FOLIO: {folio}", fontsize=12)
-            page.insert_text((100, 120), f"MARCA: {marca}", fontsize=12)
-            page.insert_text((100, 140), f"LINEA: {linea}", fontsize=12)
-            page.insert_text((100, 160), f"AÑO: {anio}", fontsize=12)
-            page.insert_text((100, 180), f"COLOR: {color}", fontsize=12)
-            page.insert_text((100, 200), f"SERIE: {serie}", fontsize=12)
-            page.insert_text((100, 220), f"MOTOR: {motor}", fontsize=12)
-            page.insert_text((100, 240), f"CONTRIBUYENTE: {contribuyente}", fontsize=12)
-            page.insert_text((100, 260), f"TIPO: {tipo_vehiculo}", fontsize=12)
-            page.insert_text((100, 280), f"EXPEDICIÓN: {fecha_expedicion}", fontsize=12)
-            page.insert_text((100, 300), f"VENCIMIENTO: {fecha_vencimiento}", fontsize=12)
+        # Insertar en Supabase
+        supabase.table('permisos').insert({
+            "folio": folio,
+            "marca": marca,
+            "linea": linea,
+            "anio": anio,
+            "color": color,
+            "serie": serie,
+            "motor": motor,
+            "contribuyente": contribuyente,
+            "tipo_vehiculo": tipo_vehiculo,
+            "fecha_expedicion": fecha_expedicion,
+            "fecha_vencimiento": fecha_vencimiento
+        }).execute()
 
-            pdf_path = os.path.join(OUTPUT_DIR, f"{folio}.pdf")
-            plantilla.save(pdf_path)
+        # Generar el PDF
+        plantilla = fitz.open("static/pdf/Guerrero.pdf")
+        page = plantilla[0]
+        page.insert_text((100, 100), f"FOLIO: {folio}", fontsize=12)
+        page.insert_text((100, 120), f"MARCA: {marca}", fontsize=12)
+        page.insert_text((100, 140), f"LÍNEA: {linea}", fontsize=12)
+        page.insert_text((100, 160), f"AÑO: {anio}", fontsize=12)
+        page.insert_text((100, 180), f"COLOR: {color}", fontsize=12)
+        page.insert_text((100, 200), f"SERIE: {serie}", fontsize=12)
+        page.insert_text((100, 220), f"MOTOR: {motor}", fontsize=12)
+        page.insert_text((100, 240), f"CONTRIBUYENTE: {contribuyente}", fontsize=12)
+        page.insert_text((100, 260), f"TIPO: {tipo_vehiculo}", fontsize=12)
+        page.insert_text((100, 280), f"EXPEDICIÓN: {fecha_expedicion}", fontsize=12)
+        page.insert_text((100, 300), f"VENCIMIENTO: {fecha_vencimiento}", fontsize=12)
 
-            return send_file(pdf_path, as_attachment=True)
+        pdf_path = os.path.join(OUTPUT_DIR, f"{folio}.pdf")
+        plantilla.save(pdf_path)
 
-        except Exception as e:
-            print("Error al registrar permiso:", e)
-            return "Ocurrió un error al registrar el permiso."
+        return send_file(pdf_path, as_attachment=True)
 
     return render_template('formulario_guerrero.html')
 
