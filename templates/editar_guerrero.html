@@ -2,38 +2,39 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Editar Permiso - Guerrero</title>
+    <title>Editar Permiso</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
+<body style="background-image: url('{{ url_for('static', filename='img/fondo_grecas.png') }}'); background-size: cover;">
+<div class="container">
     <h2>Editar Permiso</h2>
+    <form method="POST">
+        <label>Marca:</label>
+        <input type="text" name="marca" value="{{ permiso.marca }}" required>
 
-    <form method="POST" action="{{ url_for('editar_guerrero', folio=permiso['folio']) }}">
-        <label>Marca:</label><br>
-        <input type="text" name="marca" value="{{ permiso['marca'] }}" required><br><br>
+        <label>Línea:</label>
+        <input type="text" name="linea" value="{{ permiso.linea }}" required>
 
-        <label>Línea:</label><br>
-        <input type="text" name="linea" value="{{ permiso['linea'] }}" required><br><br>
+        <label>Año:</label>
+        <input type="text" name="anio" value="{{ permiso.anio }}" required>
 
-        <label>Año:</label><br>
-        <input type="text" name="año" value="{{ permiso['año'] }}" required><br><br>
+        <label>Serie:</label>
+        <input type="text" name="serie" value="{{ permiso.serie }}" required>
 
-        <label>Serie:</label><br>
-        <input type="text" name="serie" value="{{ permiso['serie'] }}" required><br><br>
+        <label>Motor:</label>
+        <input type="text" name="motor" value="{{ permiso.motor }}" required>
 
-        <label>Motor:</label><br>
-        <input type="text" name="motor" value="{{ permiso['motor'] }}" required><br><br>
+        <label>Color:</label>
+        <input type="text" name="color" value="{{ permiso.color }}" required>
 
-        <label>Color:</label><br>
-        <input type="text" name="color" value="{{ permiso['color'] }}" required><br><br>
+        <label>Contribuyente:</label>
+        <input type="text" name="contribuyente" value="{{ permiso.contribuyente }}" required>
 
-        <label>Nombre:</label><br>
-        <input type="text" name="nombre" value="{{ permiso['nombre'] }}" required><br><br>
-
-        <button type="submit">Guardar Cambios</button>
+        <div style="text-align: center; margin-top: 20px;">
+            <button type="submit">Actualizar Permiso</button>
+        </div>
     </form>
-
-    <br>
-    <a href="{{ url_for('panel') }}">Volver al panel</a>
+</div>
 </body>
 </html>
