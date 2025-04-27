@@ -2,61 +2,52 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Agregar Permiso</title>
+    <title>Panel de Permisos - Guerrero</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body style="background-image: url('{{ url_for('static', filename='img/fondo_grecas.png') }}'); background-size: cover;">
+<body>
+    <h2>Panel de Permisos</h2>
 
-<div style="max-width: 400px; margin: 40px auto; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.3);">
-    <div style="background: #0073b7; color: white; padding: 10px; font-size: 18px; display: flex; align-items: center;">
-        <img src="{{ url_for('static', filename='img/user_icon.png') }}" alt="Icono" style="height: 20px; margin-right: 8px;">
-        Agregar Permiso
-    </div>
-    <div style="padding: 20px;">
-        <h2 style="font-size: 20px; text-align: center; margin-bottom: 20px;">Datos del Vehículo</h2>
-        <form method="POST" action="{{ url_for('registrar_guerrero') }}">
-            <label for="marca">Marca</label>
-            <input type="text" id="marca" name="marca" placeholder="Ingresa la Marca" required>
+    <a href="{{ url_for('registrar_guerrero') }}">Registrar nuevo permiso</a><br><br>
+    <a href="{{ url_for('cerrar_sesion') }}">Cerrar sesión</a><br><br>
 
-            <label for="linea">Línea</label>
-            <input type="text" id="linea" name="linea" placeholder="Ingresa la Línea" required>
+    <h3>Permisos registrados:</h3>
 
-            <label for="anio">Modelo</label>
-            <input type="number" id="anio" name="anio" placeholder="Ingresa el Modelo" required>
-
-            <label for="color">Color</label>
-            <input type="text" id="color" name="color" placeholder="Ingresa el Color" required>
-
-            <label for="serie">Número de Serie</label>
-            <input type="text" id="serie" name="serie" placeholder="Ingresa el número de Serie" required>
-
-            <label for="motor">Número de Motor</label>
-            <input type="text" id="motor" name="motor" placeholder="Ingresa el número de Motor" required>
-
-            <label for="contribuyente">Nombre del Contribuyente</label>
-            <input type="text" id="contribuyente" name="contribuyente" placeholder="Ingresa el nombre del Contribuyente" required>
-
-            <label for="tipo_vehiculo">Tipo de Vehículo</label>
-            <select id="tipo_vehiculo" name="tipo_vehiculo" required>
-                <option value="">Seleccione una opción</option>
-                <option value="AUTOMÓVIL">Automóvil</option>
-                <option value="MOTOCICLETA">Motocicleta</option>
-            </select>
-
-            <div style="text-align: center; margin-top: 20px;">
-                <button type="submit" style="background: #0073b7; color: white; padding: 10px 20px; border: none; border-radius: 5px;">Registrar Permiso</button>
-            </div>
-        </form>
-        <div style="text-align: center; margin-top: 15px;">
-            <a href="{{ url_for('cerrar_sesion') }}" style="color: #0073b7; text-decoration: none; font-size: 14px;">Cerrar sesión</a>
-        </div>
-    </div>
-</div>
-
-<footer style="text-align: center; font-size: 12px; margin-top: 20px; color: #333;">
-    TRÁNSITO MUNICIPAL DE <strong>TLAPA DE COMONFORT</strong>
-</footer>
-
+    {% if permisos %}
+    <table border="1" cellpadding="5">
+        <thead>
+            <tr>
+                <th>Folio</th>
+                <th>Marca</th>
+                <th>Línea</th>
+                <th>Año</th>
+                <th>Serie</th>
+                <th>Motor</th>
+                <th>Color</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for permiso in permisos %}
+            <tr>
+                <td>{{ permiso.folio }}</td>
+                <td>{{ permiso.marca }}</td>
+                <td>{{ permiso.linea }}</td>
+                <td>{{ permiso.año }}</td>
+                <td>{{ permiso.serie }}</td>
+                <td>{{ permiso.motor }}</td>
+                <td>{{ permiso.color }}</td>
+                <td>{{ permiso.nombre }}</td>
+                <td>
+                    <a href="/descargar/{{ permiso.folio }}">Descargar PDF</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No hay permisos registrados aún.</p>
+    {% endif %}
 </body>
 </html>
