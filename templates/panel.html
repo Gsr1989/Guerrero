@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-    <h2>Panel de Control</h2>
+    <h2>Panel Principal</h2>
 
     <ul>
-        <li><a href="{{ url_for('formulario_guerrero') }}">Registrar Nuevo Permiso</a></li>
-        <li><a href="{{ url_for('verificar_folio') }}">Verificar Permiso</a></li>
+        <li><a href="{{ url_for('registrar_permiso') }}">Registrar Nuevo Permiso</a></li>
+        <li><a href="{{ url_for('listar_permisos') }}">Listar Permisos Registrados</a></li>
         <li><a href="{{ url_for('logout') }}">Cerrar Sesión</a></li>
     </ul>
+
 </body>
 </html>
