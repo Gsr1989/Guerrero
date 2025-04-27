@@ -2,43 +2,120 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Panel de Control</title>
+    <title>Panel de Permisos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body {
+            background-image: url("{{ url_for('static', filename='img/fondo_grecas.png') }}");
+            background-repeat: repeat;
+            background-size: cover;
             font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+        }
+        header {
+            background: #0073b7;
+            color: white;
             text-align: center;
+            padding: 15px;
+            font-size: 24px;
         }
-        h1 {
-            color: #333;
+        .actions {
+            text-align: center;
+            margin: 20px;
         }
-        .botones {
-            margin-top: 30px;
-        }
-        .botones a {
-            display: inline-block;
-            margin: 10px;
-            padding: 15px 30px;
-            background-color: #004d00;
+        .actions a {
+            background-color: #28a745;
             color: white;
             text-decoration: none;
-            border-radius: 8px;
-            font-size: 18px;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            font-weight: bold;
         }
-        .botones a:hover {
-            background-color: #006600;
+        table {
+            width: 95%;
+            margin: 20px auto;
+            background: rgba(255,255,255,0.9);
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            border: 1px solid #ccc;
+            text-align: center;
+            font-size: 14px;
+        }
+        th {
+            background-color: #e9ecef;
+        }
+        .btn {
+            padding: 5px 10px;
+            font-size: 12px;
+            text-decoration: none;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .btn-ver {
+            background-color: #17a2b8;
+            color: white;
+        }
+        .btn-editar {
+            background-color: #ffc107;
+            color: white;
+        }
+        .btn-eliminar {
+            background-color: #dc3545;
+            color: white;
         }
     </style>
 </head>
 <body>
-    <h1>Panel de Control</h1>
-    <div class="botones">
-        <a href="/registrar_permiso">Registrar Permiso</a>
-        <a href="/listar_permisos">Ver Permisos</a>
-        <a href="/logout">Cerrar Sesión</a>
-    </div>
+
+<header>Panel de Permisos Guerrero</header>
+
+<div class="actions">
+    <a href="{{ url_for('formulario') }}">+ Nuevo Permiso</a>
+    <a href="{{ url_for('logout') }}">Cerrar Sesión</a>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Folio</th>
+            <th>Marca</th>
+            <th>Línea</th>
+            <th>Año</th>
+            <th>Serie</th>
+            <th>Motor</th>
+            <th>Color</th>
+            <th>Contribuyente</th>
+            <th>Expedición</th>
+            <th>Vencimiento</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for permiso in permisos %}
+        <tr>
+            <td>{{ permiso.folio }}</td>
+            <td>{{ permiso.marca }}</td>
+            <td>{{ permiso.linea }}</td>
+            <td>{{ permiso.anio }}</td>
+            <td>{{ permiso.serie }}</td>
+            <td>{{ permiso.motor }}</td>
+            <td>{{ permiso.color }}</td>
+            <td>{{ permiso.contribuyente }}</td>
+            <td>{{ permiso.fecha_expedicion }}</td>
+            <td>{{ permiso.fecha_vencimiento }}</td>
+            <td>
+                <a href="{{ url_for('ver_permiso', folio=permiso.folio) }}" class="btn btn-ver">Ver</a>
+                <a href="{{ url_for('editar_permiso', folio=permiso.folio) }}" class="btn btn-editar">Editar</a>
+                <a href="{{ url_for('eliminar_permiso', folio=permiso.folio) }}" class="btn btn-eliminar">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 </body>
 </html>
