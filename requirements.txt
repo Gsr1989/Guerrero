@@ -1,7 +1,7 @@
 Flask
 supabase
 pytz
-PyMuPDF
+PyPDF2
 qrcode
 Pillow
 gunicorn
