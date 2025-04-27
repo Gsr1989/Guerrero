@@ -2,125 +2,43 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Panel de Permisos Municipales</title>
+    <title>Panel de Control</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body {
-            background-image: url("{{ url_for('static', filename='img/fondo_grecas.png') }}");
-            background-size: cover;
-            background-repeat: repeat;
             font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
             margin: 0;
-            padding: 0;
-        }
-        header {
-            background-color: #0073b7;
-            color: white;
-            padding: 15px;
+            padding: 20px;
             text-align: center;
-            font-size: 24px;
         }
-        .acciones {
-            text-align: center;
-            margin: 20px;
+        h1 {
+            color: #333;
         }
-        .acciones a {
+        .botones {
+            margin-top: 30px;
+        }
+        .botones a {
             display: inline-block;
             margin: 10px;
-            padding: 10px 20px;
-            background-color: #28a745;
+            padding: 15px 30px;
+            background-color: #004d00;
             color: white;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 8px;
+            font-size: 18px;
         }
-        .acciones a.logout {
-            background-color: #dc3545;
-        }
-        table {
-            width: 95%;
-            margin: 20px auto;
-            border-collapse: collapse;
-            background-color: rgba(255,255,255,0.9);
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: center;
-            font-size: 14px;
-        }
-        th {
-            background-color: #f4f4f4;
-        }
-        .btn {
-            padding: 5px 10px;
-            border: none;
-            background-color: #0073b7;
-            color: white;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            text-decoration: none;
-        }
-        .btn:hover {
-            background-color: #005f8c;
+        .botones a:hover {
+            background-color: #006600;
         }
     </style>
 </head>
 <body>
-
-<header>
-    Panel de Permisos Municipales
-</header>
-
-<div class="acciones">
-    <a href="{{ url_for('registrar_permiso') }}">+ Nuevo Permiso</a>
-    <a href="{{ url_for('cerrar_sesion') }}" class="logout">Cerrar Sesión</a>
-</div>
-
-<table>
-    <thead>
-        <tr>
-            <th>Folio</th>
-            <th>Marca</th>
-            <th>Línea</th>
-            <th>Año</th>
-            <th>Serie</th>
-            <th>Motor</th>
-            <th>Color</th>
-            <th>Nombre</th>
-            <th>Fecha Exp.</th>
-            <th>Fecha Venc.</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for permiso in permisos %}
-        <tr>
-            <td>{{ permiso.folio }}</td>
-            <td>{{ permiso.marca }}</td>
-            <td>{{ permiso.linea }}</td>
-            <td>{{ permiso.anio }}</td>
-            <td>{{ permiso.serie }}</td>
-            <td>{{ permiso.motor }}</td>
-            <td>{{ permiso.color }}</td>
-            <td>{{ permiso.contribuyente }}</td>
-            <td>{{ permiso.fecha_expedicion }}</td>
-            <td>{{ permiso.fecha_vencimiento }}</td>
-            <td>
-                <a class="btn" href="{{ url_for('ver_permiso', folio=permiso.folio) }}">Ver</a>
-                <a class="btn" href="{{ url_for('editar_permiso', folio=permiso.folio) }}">Editar</a>
-                <a class="btn" href="{{ url_for('eliminar_permiso', folio=permiso.folio) }}">Eliminar</a>
-                <a class="btn" href="{{ url_for('descargar_pdf', folio=permiso.folio) }}">PDF</a>
-            </td>
-        </tr>
-        {% endfor %}
-        {% if permisos|length == 0 %}
-        <tr>
-            <td colspan="11">No hay permisos registrados.</td>
-        </tr>
-        {% endif %}
-    </tbody>
-</table>
-
+    <h1>Panel de Control</h1>
+    <div class="botones">
+        <a href="/registrar_permiso">Registrar Permiso</a>
+        <a href="/listar_permisos">Ver Permisos</a>
+        <a href="/logout">Cerrar Sesión</a>
+    </div>
 </body>
 </html>
