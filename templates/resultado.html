@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Permiso Digital</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body style="background:#eef0f1; font-family:Arial,sans-serif; padding:20px;">
+
+<h2>Permiso Municipal</h2>
+
+<p><strong>Folio:</strong> {{ permiso.folio }}</p>
+<p><strong>Marca:</strong> {{ permiso.marca }}</p>
+<p><strong>Línea:</strong> {{ permiso.linea }}</p>
+<p><strong>Año:</strong> {{ permiso.anio }}</p>
+<p><strong>Serie:</strong> {{ permiso.serie }}</p>
+<p><strong>Motor:</strong> {{ permiso.motor }}</p>
+<p><strong>Color:</strong> {{ permiso.color }}</p>
+<p><strong>Contribuyente:</strong> {{ permiso.contribuyente }}</p>
+<p><strong>Fecha Expedición:</strong> {{ permiso.fecha_expedicion }}</p>
+<p><strong>Fecha Vencimiento:</strong> {{ permiso.fecha_vencimiento }}</p>
+
+<br>
+<div style="text-align:center;">
+    <a href="{{ url_for('panel') }}">Volver al panel</a>
+</div>
+
+</body>
+</html>
