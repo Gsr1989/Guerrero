@@ -2,17 +2,100 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Panel Principal</title>
+    <title>Panel de Permisos - Guerrero</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #800000;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+        .container {
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        a.button {
+            padding: 6px 12px;
+            background-color: #800000;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 2px;
+            display: inline-block;
+        }
+        a.button:hover {
+            background-color: #a00000;
+        }
+    </style>
 </head>
 <body>
-    <h2>Panel Principal</h2>
 
-    <ul>
-        <li><a href="{{ url_for('registrar_permiso') }}">Registrar Nuevo Permiso</a></li>
-        <li><a href="{{ url_for('listar_permisos') }}">Listar Permisos Registrados</a></li>
-        <li><a href="{{ url_for('logout') }}">Cerrar Sesión</a></li>
-    </ul>
+<header>
+    <h1>Panel de Permisos - Guerrero</h1>
+</header>
+
+<div class="container">
+    <a href="{{ url_for('formulario_guerrero') }}" class="button">Registrar Nuevo Permiso</a>
+    <a href="{{ url_for('logout') }}" class="button">Cerrar Sesión</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Folio</th>
+                <th>Marca</th>
+                <th>Línea</th>
+                <th>Año</th>
+                <th>Serie</th>
+                <th>Motor</th>
+                <th>Color</th>
+                <th>Nombre</th>
+                <th>Fecha Exp.</th>
+                <th>Fecha Ven.</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for permiso in permisos %}
+            <tr>
+                <td>{{ permiso.folio }}</td>
+                <td>{{ permiso.marca }}</td>
+                <td>{{ permiso.linea }}</td>
+                <td>{{ permiso.anio }}</td>
+                <td>{{ permiso.serie }}</td>
+                <td>{{ permiso.motor }}</td>
+                <td>{{ permiso.color }}</td>
+                <td>{{ permiso.nombre }}</td>
+                <td>{{ permiso.fecha_expedicion }}</td>
+                <td>{{ permiso.fecha_vencimiento }}</td>
+                <td>
+                    <a href="{{ url_for('editar_permiso', folio=permiso.folio) }}" class="button">Editar</a>
+                    <a href="{{ url_for('borrar_permiso', folio=permiso.folio) }}" class="button">Eliminar</a>
+                    <a href="{{ url_for('descargar_pdf', folio=permiso.folio) }}" class="button">PDF</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 </body>
 </html>
