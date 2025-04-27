@@ -17,13 +17,18 @@
     {% if permiso %}
     <h3>Resultado:</h3>
     <p>Folio: {{ permiso.folio }}</p>
-    <p>Contribuyente: {{ permiso.nombre }}</p>
-    <p>Serie: {{ permiso.serie }}</p>
     <p>Marca: {{ permiso.marca }}</p>
-    <p>Expedición: {{ permiso.fecha_expedicion }}</p>
+    <p>Línea: {{ permiso.linea }}</p>
+    <p>Año: {{ permiso.anio }}</p>
+    <p>Color: {{ permiso.color }}</p>
+    <p>Serie: {{ permiso.serie }}</p>
+    <p>Motor: {{ permiso.motor }}</p>
+    <p>Nombre: {{ permiso.nombre }}</p>
+    <p>Fecha de Expedición: {{ permiso.fecha_expedicion }}</p>
+    <p>Fecha de Vencimiento: {{ permiso.fecha_vencimiento }}</p>
     {% endif %}
 
     <br>
-    <a href="{{ url_for('panel') }}">Volver al panel</a>
+    <a href="{{ url_for('panel_guerrero') }}">Volver al panel</a>
 </body>
 </html>
