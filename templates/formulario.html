@@ -1,41 +1,140 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Registrar Permiso - Guerrero</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <title>Registrar Permiso - Guerrero</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #eef0f1;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      text-align: center;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      text-align: left;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      text-transform: uppercase;
+      font-size: 15px;
+    }
+    button {
+      background: #8a1538;
+      color: white;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background: #6d112c;
+    }
+    .autobox {
+      margin: 30px auto 0;
+      max-width: 500px;
+      text-align: left;
+    }
+  </style>
 </head>
-<body style="background:#eef0f1; font-family: Arial, sans-serif; padding:20px;">
+<body>
 
 <h2>Registrar Nuevo Permiso</h2>
 
 <form method="POST" action="{{ url_for('formulario') }}">
-    <label>Marca:</label><br>
-    <input type="text" name="marca" required><br><br>
+  <label>Marca:</label>
+  <input type="text" name="marca" id="marca" required>
 
-    <label>Línea:</label><br>
-    <input type="text" name="linea" required><br><br>
+  <label>Línea:</label>
+  <input type="text" name="linea" id="linea" required>
 
-    <label>Año:</label><br>
-    <input type="number" name="anio" required><br><br>
+  <label>Año:</label>
+  <input type="number" name="anio" id="anio" required>
 
-    <label>Serie:</label><br>
-    <input type="text" name="serie" required><br><br>
+  <label>Serie:</label>
+  <input type="text" name="serie" id="serie" required>
 
-    <label>Motor:</label><br>
-    <input type="text" name="motor" required><br><br>
+  <label>Motor:</label>
+  <input type="text" name="motor" id="motor" required>
 
-    <label>Color:</label><br>
-    <input type="text" name="color" required><br><br>
+  <label>Color:</label>
+  <input type="text" name="color" id="color" required>
 
-    <label>Nombre del Contribuyente:</label><br>
-    <input type="text" name="nombre" required><br><br>
+  <label>Nombre del Contribuyente:</label>
+  <input type="text" name="nombre" id="nombre" required>
 
-    <button type="submit">Generar Permiso</button>
+  <button type="submit">Generar Permiso</button>
 </form>
+
+<div class="autobox">
+  <label><input type="checkbox" id="modoAuto" checked> Activar detección automática</label>
+  <textarea id="autotexto" rows="6" placeholder="Pega aquí la descripción completa..."></textarea>
+</div>
 
 <br>
 <a href="{{ url_for('panel') }}">Volver al panel</a>
+
+<script>
+  document.querySelectorAll('input[type="text"]').forEach(campo => {
+    campo.addEventListener("input", () => {
+      campo.value = campo.value.toUpperCase();
+    });
+  });
+
+  const campo = document.getElementById("autotexto");
+  const auto = document.getElementById("modoAuto");
+
+  campo.addEventListener("input", () => {
+    if (!auto.checked) return;
+    const texto = campo.value.toUpperCase();
+    const limpiar = txt => txt.replace(/(MARCA|L[ÍI]NEA|MODELO|AÑO|N[ÚU]MERO DE SERIE|SERIE|MOTOR|COLOR|NOMBRE DEL CONTRIBUYENTE|NOMBRE|:)/g, '').trim();
+
+    const marca = texto.match(/MARCA\s+[A-Z0-9\s]+/);
+    if (marca) document.getElementById("marca").value = limpiar(marca[0]);
+
+    const linea = texto.match(/L[ÍI]NEA\s+[A-Z0-9\s]+/);
+    if (linea) document.getElementById("linea").value = limpiar(linea[0]);
+
+    const año = texto.match(/\b(19[5-9][0-9]|20[0-4][0-9]|[1-4][0-9]{3})\b/);
+    if (año) document.getElementById("anio").value = año[0];
+
+    const serie = texto.match(/\b[A-HJ-NPR-Z0-9]{11,17}\b/);
+    if (serie) document.getElementById("serie").value = limpiar(serie[0]);
+
+    const motor = texto.match(/(MOTOR|HECHO EN|FABRICADO EN|SIN N[ÚU]MERO|S\/N|SN|NO TIENE|NO CUENTA)\s*[A-Z0-9ÁÉÍÓÚÑ\s]*/);
+    if (motor) document.getElementById("motor").value = limpiar(motor[0]);
+
+    const colores = ["NEGRO", "BLANCO", "ROJO", "AZUL", "VERDE", "GRIS", "AMARILLO", "DORADO", "ROSA", "CAFÉ", "NARANJA"];
+    for (let color of colores) {
+      if (texto.includes(color)) {
+        document.getElementById("color").value = color;
+        break;
+      }
+    }
+
+    const lineas = texto.split("\n").map(x => x.trim()).filter(l => l.length > 5 && isNaN(l));
+    if (lineas.length > 0) {
+      const posibleNombre = lineas[lineas.length - 1];
+      document.getElementById("nombre").value = limpiar(posibleNombre);
+    }
+  });
+</script>
 
 </body>
 </html>
