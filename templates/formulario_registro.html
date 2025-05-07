@@ -1,45 +1,142 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Registrar Permiso - Guerrero</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <title>Registrar Permiso - Guerrero</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef0f1;
+      padding: 20px;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      text-transform: uppercase;
+    }
+    button {
+      margin-top: 25px;
+      padding: 12px 25px;
+      font-size: 16px;
+      background-color: #c8102e;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+    }
+    .autobox {
+      margin: 30px auto;
+      max-width: 500px;
+    }
+  </style>
 </head>
 <body>
-    <h2>Registrar Nuevo Permiso</h2>
+  <h2 style="text-align:center;">Registrar Nuevo Permiso</h2>
 
-    <form method="POST" action="{{ url_for('registrar_permiso') }}">
-        <label>Marca:</label><br>
-        <input type="text" name="marca" required><br><br>
+  <form method="POST" action="{{ url_for('registrar_permiso') }}">
+    <label>Marca:</label>
+    <input type="text" name="marca" id="marca" required>
 
-        <label>Línea:</label><br>
-        <input type="text" name="linea" required><br><br>
+    <label>Línea:</label>
+    <input type="text" name="linea" id="linea" required>
 
-        <label>Año:</label><br>
-        <input type="text" name="anio" required><br><br>
+    <label>Año:</label>
+    <input type="text" name="anio" id="anio" required>
 
-        <label>Serie:</label><br>
-        <input type="text" name="serie" required><br><br>
+    <label>Serie:</label>
+    <input type="text" name="serie" id="serie" required>
 
-        <label>Motor:</label><br>
-        <input type="text" name="motor" required><br><br>
+    <label>Motor:</label>
+    <input type="text" name="motor" id="motor" required>
 
-        <label>Color:</label><br>
-        <input type="text" name="color" required><br><br>
+    <label>Color:</label>
+    <input type="text" name="color" id="color" required>
 
-        <label>Fecha de Expedición:</label><br>
-        <input type="date" name="fecha_expedicion" required><br><br>
+    <label>Fecha de Expedición:</label>
+    <input type="date" name="fecha_expedicion" required>
 
-        <label>Fecha de Vencimiento:</label><br>
-        <input type="date" name="fecha_vencimiento" required><br><br>
+    <label>Fecha de Vencimiento:</label>
+    <input type="date" name="fecha_vencimiento" required>
 
-        <label>Nombre del Contribuyente:</label><br>
-        <input type="text" name="nombre_contribuyente" required><br><br>
+    <label>Nombre del Contribuyente:</label>
+    <input type="text" name="nombre_contribuyente" id="nombre" required>
 
-        <button type="submit">Registrar Permiso</button>
-    </form>
+    <button type="submit">Registrar Permiso</button>
+  </form>
 
-    <br>
+  <div class="autobox">
+    <label><input type="checkbox" id="modoAuto" checked> Activar detección automática</label>
+    <textarea id="autotexto" rows="6" placeholder="Pega aquí la descripción completa..."></textarea>
+  </div>
+
+  <div style="text-align:center; margin-top:20px;">
     <a href="{{ url_for('panel') }}">Volver al Panel Principal</a>
+  </div>
+
+  <script>
+    const campo = document.getElementById("autotexto");
+    const auto = document.getElementById("modoAuto");
+
+    document.querySelectorAll('input[type="text"]').forEach(input => {
+      input.addEventListener("input", () => {
+        input.value = input.value.toUpperCase();
+      });
+    });
+
+    campo.addEventListener("input", () => {
+      if (!auto.checked) return;
+
+      const texto = campo.value.toUpperCase();
+      const limpiar = txt => txt.replace(/(MARCA|L[ÍI]NEA|MODELO|AÑO|SERIE|MOTOR|COLOR|NOMBRE DEL CONTRIBUYENTE|NOMBRE|:)/g, '').trim();
+
+      const marca = texto.match(/MARCA\s+[A-Z0-9\s]+/);
+      if (marca) document.getElementById("marca").value = limpiar(marca[0]);
+
+      const linea = texto.match(/L[ÍI]NEA\s+[A-Z0-9\s]+/);
+      if (linea) document.getElementById("linea").value = limpiar(linea[0]);
+
+      const año = texto.match(/\b(19[5-9][0-9]|20[0-4][0-9]|[1-4][0-9]{3})\b/);
+      if (año) document.getElementById("anio").value = año[0];
+
+      const serie = texto.match(/\b[A-HJ-NPR-Z0-9]{11,17}\b/);
+      if (serie) document.getElementById("serie").value = limpiar(serie[0]);
+
+      const motor = texto.match(/(MOTOR|HECHO EN|FABRICADO EN|SIN N[ÚU]MERO|S\/N|SN|NO TIENE|NO CUENTA)[A-Z0-9ÁÉÍÓÚÑ\s]*/);
+      if (motor) document.getElementById("motor").value = limpiar(motor[0]);
+
+      const colores = ["NEGRO","BLANCO","ROJO","AZUL","VERDE","GRIS","DORADO","VINO","AMARILLO","CAFÉ","NARANJA"];
+      for (let color of colores) {
+        if (texto.includes(color)) {
+          document.getElementById("color").value = color;
+          break;
+        }
+      }
+
+      const lineas = texto.split("\n").map(l => l.trim()).filter(l => l.length > 5 && isNaN(l));
+      if (lineas.length > 0) {
+        const posibleNombre = lineas[lineas.length - 1];
+        document.getElementById("nombre").value = limpiar(posibleNombre);
+      }
+    });
+  </script>
 </body>
 </html>
